@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطعم أهلاً وسهلاً | النسخة الأسطورية</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        cairo: ['Cairo', 'sans-serif'],
+                        ruqaa: ['Aref Ruqaa', 'serif']
+                    },
+                    colors: {
+                        brand: { 
+                            red: '#c02626',
+                            dark: '#7f1d1d',
+                            gold: '#f59e0b',
+                            bg: '#fff7ed'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 5px 20px -5px rgba(0, 0, 0, 0.1)',
+                        'floating': '0 10px 30px -5px rgba(192, 38, 38, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; padding-bottom: 140px; background-color: #fff7ed; -webkit-tap-highlight-color: transparent; }
+        
+        /* تحسين الصور لتناسب التصميم الجديد */
+        .food-img { width: 110px; height: 110px; object-fit: cover; border-radius: 16px; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .drink-img { height: 90px; width: 100%; object-fit: contain; padding: 5px; }
+        
+        /* أزرار التحكم الضخمة والفخمة */
+        .btn-control {
+            width: 40px; height: 40px; /* حجم كبير */
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; font-weight: 900; 
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 10; /* لضمان أنها فوق الكرت */
+        }
+        
+        .btn-add { background-color: #c02626; color: white; border: none; }
+        .btn-add:active { transform: scale(0.9); background-color: #991b1b; }
+        
+        .btn-remove { background-color: white; color: #c02626; border: 2px solid #fee2e2; }
+        .btn-remove:active { transform: scale(0.9); background-color: #fee2e2; }
+
+        .qty-display { 
+            font-weight: 800; font-size: 1.1rem; min-width: 24px; text-align: center; 
+            color: #7f1d1d; 
+        }
+
+        /* جعل الكرت قابلاً للنقر بالكامل */
+        .clickable-card { 
+            position: relative; 
+            transition: transform 0.2s; 
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .clickable-card:active { transform: scale(0.98); background-color: #fff1f2; }
+        
+        /* تأثير التموج عند النقر */
+        .ripple {
+            position: absolute;
+            background: rgba(192, 38, 38, 0.1);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+        .no-select { user-select: none; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased selection:bg-brand-red selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="bg-white/95 backdrop-blur-xl text-brand-red shadow-sm sticky top-0 z-50 px-5 py-2 flex justify-between items-center rounded-b-3xl border-b border-orange-100/50">
+        <div class="flex items-center gap-3">
+            <!-- 🔴🔴🔴 هنا التعديل: مكان اللوجو الجديد 🔴🔴🔴 -->
+            <!-- يجب أن تكون الصورة باسم logo.png وفي نفس المجلد -->
+            <img src="https://i.postimg.cc/9MScVN85/Screenshot-20251216-113344-Whats-App.png" alt="شعار المطعم" class="w-14 h-14 rounded-2xl shadow-xl transform rotate-3 border-2 border-white object-cover">
+            
+            <div class="font-extrabold text-xl tracking-wide text-brand-dark">أهلاً وسهلاً</div>
+        </div>
+        <a href="tel:967779100056" class="bg-brand-red text-white w-11 h-11 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform animate-pulse border-2 border-orange-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-64 mx-3 mt-4 rounded-[2rem] overflow-hidden shadow-floating group">
+        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" loading="lazy" class="absolute inset-0 w-full h-full object-cover brightness-[0.60] group-hover:scale-105 transition-transform duration-1000">
+        <div class="relative z-10 h-full flex flex-col justify-center items-center text-center text-white p-4">
+            <h1 class="text-6xl md:text-7xl font-ruqaa mb-4 drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)] text-brand-gold">جوعان؟</h1>
+            <p class="text-white font-bold text-lg bg-white/10 px-8 py-2 rounded-full backdrop-blur-md border border-white/20 shadow-2xl">
+                مذاق الأصالة في شارع الستين
+            </p>
+        </div>
+    </header>
+
+    <!-- Menu Container -->
+    <div class="container mx-auto px-4 py-8 space-y-12">
+
+        <!-- 1. اللحوم والمشويات (Layout Optimized) -->
+        <section>
+            <div class="flex items-center gap-3 mb-6 px-1">
+                <span class="text-3xl filter drop-shadow-sm">🔥</span>
+                <h3 class="font-black text-2xl text-brand-dark">اللحوم والمشويات</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                
+                <!-- صنف 1 -->
+                <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
+                     onclick="addToCartWithEffect(this, 'دجاج شواية', 4000)">
+                    <img src="https://i.postimg.cc/c4cw1RSk/sddefault-(4).jpg" class="food-img shadow-md">
+                    <div class="flex-1 h-full flex flex-col justify-between py-1">
+                        <div>
+                            <h4 class="font-black text-xl text-gray-800 leading-tight mb-1">دجاج شواية</h4>
+                            <p class="text-sm text-gray-500 font-medium">تحمير ذهبي مع الرز</p>
+                        </div>
+                        <div class="flex justify-between items-end mt-3">
+                            <span class="font-black text-brand-red text-2xl">4000 <span class="text-xs text-gray-400 font-bold">ر.ي</span></span>
+                            <!-- Controls -->
+                            <div class="flex items-center gap-3" id="controls-دجاج شواية">
+                                <button class="btn-control btn-remove hidden" onclick="event.stopPropagation(); updateQty('دجاج شواية', 4000, -1)">-</button>
+                                <span class="qty-display hidden" id="qty-دجاج شواية">0</span>
+                                <button class="btn-control btn-add" onclick="event.stopPropagation(); updateQty('دجاج شواية', 4000, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- صنف 2 -->
+                <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
+                     onclick="addToCartWithEffect(this, 'كباب صنعاني', 4000)">
+                    <img src="https://i.postimg.cc/x8TwDpQV/kabab-Sanani-1.jpg" class="food-img shadow-md">
+                    <div class="flex-1 h-full flex flex-col justify-between py-1">
+                        <div>
+                            <h4 class="font-black text-xl text-gray-800 leading-tight mb-1">كباب صنعاني</h4>
+                            <p class="text-sm text-gray-500 font-medium">لحم بلدي طازج</p>
+                        </div>
+                        <div class="flex justify-between items-end mt-3">
+                            <span class="font-black text-brand-red text-2xl">4000 <span class="text-xs text-gray-400 font-bold">ر.ي</span></span>
+                            <div class="flex items-center gap-3" id="controls-كباب صنعاني">
+                                <button class="btn-control btn-remove hidden" onclick="event.stopPropagation(); updateQty('كباب صنعاني', 4000, -1)">-</button>
+                                <span class="qty-display hidden" id="qty-كباب صنعاني">0</span>
+                                <button class="btn-control btn-add" onclick="event.stopPropagation(); updateQty('كباب صنعاني', 4000, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- صنف 3 -->
+                <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
+                     onclick="addToCartWithEffect(this, 'أوصال لحم', 3500)">
+                    <img src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=400&q=80" class="food-img shadow-md">
+                    <div class="flex-1 h-full flex flex-col justify-between py-1">
+                        <div>
+                            <h4 class="font-black text-xl text-gray-800 leading-tight mb-1">أوصال لحم</h4>
+                            <p class="text-sm text-gray-500 font-medium">مشوي على الفحم</p>
+                        </div>
+                        <div class="flex justify-between items-end mt-3">
+                            <span class="font-black text-brand-red text-2xl">3500 <span class="text-xs text-gray-400 font-bold">ر.ي</span></span>
+                            <div class="flex items-center gap-3" id="controls-أوصال لحم">
+                                <button class="btn-control btn-remove hidden" onclick="event.stopPropagation(); updateQty('أوصال لحم', 3500, -1)">-</button>
+                                <span class="qty-display hidden" id="qty-أوصال لحم">0</span>
+                                <button class="btn-control btn-add" onclick="event.stopPropagation(); updateQty('أوصال لحم', 3500, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- صنف 4 -->
+                <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
+                     onclick="addToCartWithEffect(this, 'بروست', 1200)">
+                    <img src="https://i.postimg.cc/rsXY09Z7/6f2bb906-a050-4fec-9b93-cc40f0de1c30.jpg" class="food-img shadow-md">
+                    <div class="flex-1 h-full flex flex-col justify-between py-1">
+                        <div>
+                            <h4 class="font-black text-xl text-gray-800 leading-tight mb-1">بروست</h4>
+                            <p class="text-sm text-gray-500 font-medium">طازج ومقرمش</p>
+                        </div>
+                        <div class="flex justify-between items-end mt-3">
+                            <span class="font-black text-brand-red text-2xl">1200 <span class="text-xs text-gray-400 font-bold">ر.ي</span></span>
+                            <div class="flex items-center gap-3" id="controls-بروست">
+                                <button class="btn-control btn-remove hidden" onclick="event.stopPropagation(); updateQty('بروست', 1200, -1)">-</button>
+                                <span class="qty-display hidden" id="qty-بروست">0</span>
+                                <button class="btn-control btn-add" onclick="event.stopPropagation(); updateQty('بروست', 1200, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. الأكل الشعبي -->
+        <section>
+            <div class="flex items-center gap-3 mb-6 px-1">
+                <span class="text-3xl filter drop-shadow-sm">🍲</span>
+                <h3 class="font-black text-2xl text-brand-dark">الأكل الشعبي</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <!-- سلتة -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'سلتة صنعانية', 1500)">
+                    <img src="https://i.postimg.cc/tTc1WW7p/Almawqea2021-12-20-08-38-53-447539.jpg" class="w-full h-32 object-cover rounded-2xl mb-3 shadow-sm">
+                    <h4 class="font-bold text-gray-800 mb-2">سلتة صنعانية</h4>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red font-black text-lg">1500 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-سلتة صنعانية">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('سلتة صنعانية', 1500, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-سلتة صنعانية">0</span>
+                             <button class="btn-control btn-add scale-90" onclick="event.stopPropagation(); updateQty('سلتة صنعانية', 1500, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- فحسة -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'فحسة لحم', 2500)">
+                    <img src="https://i.postimg.cc/SxFRfmds/fhsh.webp" class="w-full h-32 object-cover rounded-2xl mb-3 shadow-sm">
+                    <h4 class="font-bold text-gray-800 mb-2">فحسة لحم</h4>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red font-black text-lg">2500 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-فحسة لحم">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('فحسة لحم', 2500, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-فحسة لحم">0</span>
+                             <button class="btn-control btn-add scale-90" onclick="event.stopPropagation(); updateQty('فحسة لحم', 2500, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- عصيد -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'عصيد ومرق', 2000)">
+                    <img src="https://i.postimg.cc/rpXzVM34/sddefault.jpg" class="w-full h-32 object-cover rounded-2xl mb-3 shadow-sm">
+                    <h4 class="font-bold text-gray-800 mb-2">عصيد ومرق</h4>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red font-black text-lg">2000 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-عصيد ومرق">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('عصيد ومرق', 2000, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-عصيد ومرق">0</span>
+                             <button class="btn-control btn-add scale-90" onclick="event.stopPropagation(); updateQty('عصيد ومرق', 2000, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مطبق -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'مطبق', 600)">
+                    <img src="https://i.postimg.cc/L4kMkqkt/alswrt-alryysyt-lwsftmtbq-alymny-shl.jpg" class="w-full h-32 object-cover rounded-2xl mb-3 shadow-sm">
+                    <h4 class="font-bold text-gray-800 mb-2">مطبق</h4>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red font-black text-lg">600 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-مطبق">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('مطبق', 600, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-مطبق">0</span>
+                             <button class="btn-control btn-add scale-90" onclick="event.stopPropagation(); updateQty('مطبق', 600, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. الأرز والولائم -->
+        <section>
+            <div class="flex items-center gap-3 mb-6 px-1">
+                <span class="text-3xl filter drop-shadow-sm">🍚</span>
+                <h3 class="font-black text-2xl text-brand-dark">الأرز والولائم</h3>
+            </div>
+            <div class="grid gap-5">
+                <!-- مندي -->
+                <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
+                     onclick="addToCartWithEffect(this, 'مندي لحم تيس', 4500)">
+                    <div class="w-2/5">
+                        <img src="https://i.postimg.cc/4xhb24pp/maxresdefault.jpg" class="h-full w-full object-cover">
+                    </div>
+                    <div class="w-3/5 p-5 flex flex-col justify-center items-start">
+                        <h4 class="font-black text-xl text-gray-800">مندي لحم تيس</h4>
+                        <p class="text-sm text-gray-400 mb-4 mt-1 font-medium">من التنور رأساً إليك</p>
+                        <div class="w-full flex justify-between items-end">
+                            <span class="text-2xl font-black text-brand-red">4500 <small class="text-gray-400 text-xs">ر.ي</small></span>
+                            <div class="flex items-center gap-3" id="controls-مندي لحم تيس">
+                                <button class="btn-control btn-remove hidden" onclick="event.stopPropagation(); updateQty('مندي لحم تيس', 4500, -1)">-</button>
+                                <span class="qty-display hidden" id="qty-مندي لحم تيس">0</span>
+                                <button class="btn-control btn-add" onclick="event.stopPropagation(); updateQty('مندي لحم تيس', 4500, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- زربيان -->
+                <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
+                     onclick="addToCartWithEffect(this, 'زربيان عدني', 4500)">
+                    <div class="w-2/5">
+                        <img src="https://i.postimg.cc/9F9rvDNz/maxresdefault-(2).jpg" class="h-full w-full object-cover">
+                    </div>
+                    <div class="w-3/5 p-5 flex flex-col justify-center items-start">
+                        <h4 class="font-black text-xl text-gray-800">زربيان عدني</h4>
+                        <p class="text-sm text-gray-400 mb-4 mt-1 font-medium">بالزبادي والبهارات</p>
+                        <div class="w-full flex justify-between items-end">
+                            <span class="text-2xl font-black text-brand-red">4500 <small class="text-gray-400 text-xs">ر.ي</small></span>
+                            <div class="flex items-center gap-3" id="controls-زربيان عدني">
+                                <button class="btn-control btn-remove hidden" onclick="event.stopPropagation(); updateQty('زربيان عدني', 4500, -1)">-</button>
+                                <span class="qty-display hidden" id="qty-زربيان عدني">0</span>
+                                <button class="btn-control btn-add" onclick="event.stopPropagation(); updateQty('زربيان عدني', 4500, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- برجر -->
+                <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
+                     onclick="addToCartWithEffect(this, 'برجر', 1000)">
+                    <div class="w-2/5">
+                        <img src="https://i.postimg.cc/zG8wLQDr/pngtree-breakfast-burger-with-bacon-and-egg-on-wood-top-image-2506924.jpg" class="h-full w-full object-cover">
+                    </div>
+                    <div class="w-3/5 p-5 flex flex-col justify-center items-start">
+                        <h4 class="font-black text-xl text-gray-800">برجر</h4>
+                        <p class="text-sm text-gray-400 mb-4 mt-1 font-medium">طازج مع الخضار</p>
+                        <div class="w-full flex justify-between items-end">
+                            <span class="text-2xl font-black text-brand-red">1000 <small class="text-gray-400 text-xs">ر.ي</small></span>
+                            <div class="flex items-center gap-3" id="controls-برجر">
+                                <button class="btn-control btn-remove hidden" onclick="event.stopPropagation(); updateQty('برجر', 1000, -1)">-</button>
+                                <span class="qty-display hidden" id="qty-برجر">0</span>
+                                <button class="btn-control btn-add" onclick="event.stopPropagation(); updateQty('برجر', 1000, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. الإدامات -->
+        <section>
+            <div class="flex items-center gap-3 mb-6 px-1">
+                <span class="text-3xl filter drop-shadow-sm">🥘</span>
+                <h3 class="font-black text-2xl text-brand-dark">الإدامات</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <!-- فاصوليا -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'فاصوليا', 1000)">
+                    <img src="https://i.postimg.cc/sDKpg6RB/sddefault-(2).jpg" class="w-full h-24 object-cover rounded-2xl mb-2">
+                    <h5 class="font-bold text-gray-800 mb-2">فاصوليا</h5>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red text-lg font-black">1000 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-فاصوليا">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('فاصوليا', 1000, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-فاصوليا">0</span>
+                             <button class="btn-control btn-add scale-75" onclick="event.stopPropagation(); updateQty('فاصوليا', 1000, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تونة -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'سمك تونة', 1200)">
+                    <img src="https://i.postimg.cc/6QzsjNsf/Screenshot-20251215-141250-Maps.jpg" class="w-full h-24 object-cover rounded-2xl mb-2">
+                    <h5 class="font-bold text-gray-800 mb-2">سمك تونة</h5>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red text-lg font-black">1200 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-سمك تونة">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('سمك تونة', 1200, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-سمك تونة">0</span>
+                             <button class="btn-control btn-add scale-75" onclick="event.stopPropagation(); updateQty('سمك تونة', 1200, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شكشوكة (المستعادة) -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'شكشوكة', 800)">
+                    <img src="https://i.postimg.cc/6qrFZsh2/alqlayat-shkshwkt-byd-800x560.jpg" class="w-full h-24 object-cover rounded-2xl mb-2">
+                    <h5 class="font-bold text-gray-800 mb-2">شكشوكة</h5>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red text-lg font-black">800 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-شكشوكة">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('شكشوكة', 800, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-شكشوكة">0</span>
+                             <button class="btn-control btn-add scale-75" onclick="event.stopPropagation(); updateQty('شكشوكة', 800, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- لحم صغار (المستعاد) -->
+                <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
+                     onclick="addToCartWithEffect(this, 'لحم صغار', 1000)">
+                    <img src="https://i.postimg.cc/Y9cXzn03/maxresdefault-(3).jpg" class="w-full h-24 object-cover rounded-2xl mb-2">
+                    <h5 class="font-bold text-gray-800 mb-2">لحم صغار</h5>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-brand-red text-lg font-black">1000 <small class="text-xs">ر.ي</small></span>
+                        <div class="flex items-center gap-2" id="controls-لحم صغار">
+                             <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('لحم صغار', 1000, -1)">-</button>
+                             <span class="qty-display hidden text-sm" id="qty-لحم صغار">0</span>
+                             <button class="btn-control btn-add scale-75" onclick="event.stopPropagation(); updateQty('لحم صغار', 1000, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. المشروبات (مكتملة ومصححة) -->
+        <section>
+            <div class="flex items-center gap-3 mb-6 px-1">
+                <span class="text-3xl filter drop-shadow-sm">🥤</span>
+                <h3 class="font-black text-2xl text-brand-dark">عصائر ومشروبات</h3>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <!-- ليمون -->
+                <div class="clickable-card bg-lime-50/50 border border-lime-100 p-2 rounded-3xl text-center"
+                     onclick="addToCartWithEffect(this, 'عصير ليمون', 500)">
+                    <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200&q=80" class="w-full h-24 object-cover rounded-2xl mb-2 shadow-sm">
+                    <div class="flex justify-between items-center mt-1 px-1">
+                        <div class="text-right">
+                            <p class="font-bold text-xs text-lime-900">ليمون</p>
+                            <span class="text-[10px] font-bold text-gray-500">500 <small class="text-[9px]">ر.ي</small></span>
+                        </div>
+                        <div class="flex items-center gap-1" id="controls-عصير ليمون">
+                            <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('عصير ليمون', 500, -1)">-</button>
+                            <span class="qty-display hidden text-xs" id="qty-عصير ليمون">0</span>
+                            <button class="btn-control btn-add scale-75 bg-lime-600 hover:bg-lime-700 shadow-none" onclick="event.stopPropagation(); updateQty('عصير ليمون', 500, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مانجو -->
+                <div class="clickable-card bg-yellow-50/50 border border-yellow-100 p-2 rounded-3xl text-center"
+                     onclick="addToCartWithEffect(this, 'عصير مانجو', 800)">
+                    <img src="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=200&q=80" class="w-full h-24 object-cover rounded-2xl mb-2 shadow-sm">
+                    <div class="flex justify-between items-center mt-1 px-1">
+                        <div class="text-right">
+                            <p class="font-bold text-xs text-yellow-900">مانجو</p>
+                            <span class="text-[10px] font-bold text-gray-500">800 <small class="text-[9px]">ر.ي</small></span>
+                        </div>
+                        <div class="flex items-center gap-1" id="controls-عصير مانجو">
+                            <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('عصير مانجو', 800, -1)">-</button>
+                            <span class="qty-display hidden text-xs" id="qty-عصير مانجو">0</span>
+                            <button class="btn-control btn-add scale-75 bg-yellow-600 hover:bg-yellow-700 shadow-none" onclick="event.stopPropagation(); updateQty('عصير مانجو', 800, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جوافة -->
+                <div class="clickable-card bg-green-50/50 border border-green-100 p-2 rounded-3xl text-center"
+                     onclick="addToCartWithEffect(this, 'عصير جوافة', 700)">
+                    <img src="https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?w=200&q=80" class="w-full h-24 object-cover rounded-2xl mb-2 shadow-sm">
+                    <div class="flex justify-between items-center mt-1 px-1">
+                        <div class="text-right">
+                            <p class="font-bold text-xs text-green-900">جوافة</p>
+                            <span class="text-[10px] font-bold text-gray-500">700 <small class="text-[9px]">ر.ي</small></span>
+                        </div>
+                        <div class="flex items-center gap-1" id="controls-عصير جوافة">
+                            <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('عصير جوافة', 700, -1)">-</button>
+                            <span class="qty-display hidden text-xs" id="qty-عصير جوافة">0</span>
+                            <button class="btn-control btn-add scale-75 bg-green-600 hover:bg-green-700 shadow-none" onclick="event.stopPropagation(); updateQty('عصير جوافة', 700, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بيبسي -->
+                <div class="clickable-card bg-blue-50/50 border border-blue-100 p-2 rounded-3xl text-center"
+                     onclick="addToCartWithEffect(this, 'بيبسي', 300)">
+                    <img src="https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=200&q=80" class="w-full h-24 object-cover rounded-2xl mb-2 shadow-sm">
+                    <div class="flex justify-between items-center mt-1 px-1">
+                        <div class="text-right">
+                            <p class="font-bold text-xs text-blue-900">بيبسي</p>
+                            <span class="text-[10px] font-bold text-gray-500">300 <small class="text-[9px]">ر.ي</small></span>
+                        </div>
+                        <div class="flex items-center gap-1" id="controls-بيبسي">
+                            <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('بيبسي', 300, -1)">-</button>
+                            <span class="qty-display hidden text-xs" id="qty-بيبسي">0</span>
+                            <button class="btn-control btn-add scale-75 bg-blue-600 hover:bg-blue-700 shadow-none" onclick="event.stopPropagation(); updateQty('بيبسي', 300, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- برتقال (المعاد) -->
+                <div class="clickable-card bg-orange-50/50 border border-orange-100 p-2 rounded-3xl text-center"
+                     onclick="addToCartWithEffect(this, 'عصير برتقال', 200)">
+                    <img src="https://i.postimg.cc/dVn1PprD/6385255.jpg" class="w-full h-24 object-cover rounded-2xl mb-2 shadow-sm">
+                    <div class="flex justify-between items-center mt-1 px-1">
+                        <div class="text-right">
+                            <p class="font-bold text-xs text-orange-900">برتقال</p>
+                            <span class="text-[10px] font-bold text-gray-500">200 <small class="text-[9px]">ر.ي</small></span>
+                        </div>
+                        <div class="flex items-center gap-1" id="controls-عصير برتقال">
+                            <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('عصير برتقال', 200, -1)">-</button>
+                            <span class="qty-display hidden text-xs" id="qty-عصير برتقال">0</span>
+                            <button class="btn-control btn-add scale-75 bg-orange-600 hover:bg-orange-700 shadow-none" onclick="event.stopPropagation(); updateQty('عصير برتقال', 200, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7UP (المعاد) -->
+                <div class="clickable-card bg-teal-50/50 border border-teal-100 p-2 rounded-3xl text-center"
+                     onclick="addToCartWithEffect(this, '7 UP', 300)">
+                    <img src="https://i.postimg.cc/W1VnfFwc/Pepsi-Co-7UP-Global-Mixology-Campaign.jpg" class="w-full h-24 object-cover rounded-2xl mb-2 shadow-sm">
+                    <div class="flex justify-between items-center mt-1 px-1">
+                        <div class="text-right">
+                            <p class="font-bold text-xs text-teal-900">7 UP</p>
+                            <span class="text-[10px] font-bold text-gray-500">300 <small class="text-[9px]">ر.ي</small></span>
+                        </div>
+                        <div class="flex items-center gap-1" id="controls-7 UP">
+                            <button class="btn-control btn-remove hidden scale-75" onclick="event.stopPropagation(); updateQty('7 UP', 300, -1)">-</button>
+                            <span class="qty-display hidden text-xs" id="qty-7 UP">0</span>
+                            <button class="btn-control btn-add scale-75 bg-teal-600 hover:bg-teal-700 shadow-none" onclick="event.stopPropagation(); updateQty('7 UP', 300, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer - Yemen Click -->
+    <div class="bg-gradient-to-b from-transparent to-stone-100 border-t border-gray-200 py-6 text-center mt-8 rounded-t-[3rem]">
+        <p class="text-xs text-gray-400 mb-4">جميع الحقوق محفوظة © مطعم أهلاً وسهلاً 2025</p>
+        
+        <div class="flex justify-center items-center">
+            <a href="https://wa.me/967775904946?text=السلام%20عليكم%20فريق%20YemenClick%20..%20أريد%20تصميم%20موقع%20احترافي%20لنفس%20المطعم" 
+               target="_blank" 
+               class="group relative bg-stone-200 hover:bg-stone-300 text-gray-700 px-6 py-2 rounded-xl shadow-sm hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                <div class="text-right">
+                    <span class="text-[10px] text-gray-500 block group-hover:text-brand-gold transition">Powered By</span>
+                    <span class="font-bold tracking-wider text-sm">YEMEN CLICK 🚀</span>
+                </div>
+                <div class="h-8 w-8 bg-stone-300 group-hover:bg-brand-gold group-hover:text-white text-gray-600 rounded-full flex items-center justify-center transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Floating Actions -->
+    <div class="fixed bottom-28 right-5 z-30 flex flex-col items-center gap-4">
+        <!-- Cart Bubble -->
+        <div class="relative group cursor-pointer" onclick="document.getElementById('cartBar').classList.remove('translate-y-full')">
+            <div class="bg-gradient-to-tr from-brand-red to-orange-500 text-white p-4 rounded-full shadow-floating transform transition group-hover:scale-110 border-4 border-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <span id="cartCount" class="absolute -top-1 -left-1 bg-white text-brand-red w-6 h-6 rounded-full flex items-center justify-center text-xs font-black border-2 border-orange-100 shadow-md transform scale-0 transition-transform duration-300">0</span>
+        </div>
+        
+        <!-- WhatsApp Bubble -->
+        <a href="https://wa.me/967779100056?text=السلام%20عليكم%20عندي%20استفسار" 
+           class="bg-[#25D366] text-white p-4 rounded-full shadow-floating hover:scale-110 transition border-4 border-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+        </a>
+    </div>
+
+    <!-- Sticky Cart Bar -->
+    <div id="cartBar" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl text-gray-800 p-5 rounded-t-[2.5rem] shadow-[0_-10px_60px_rgba(0,0,0,0.15)] transform translate-y-full transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1) z-50 flex justify-between items-center border-t border-gray-100">
+        <div class="flex flex-col">
+            <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">المجموع الكلي</span>
+            <div class="font-black text-4xl text-brand-red flex items-baseline gap-1 mt-1">
+                <span id="total">0</span> <span class="text-sm font-bold text-gray-400">ر.ي</span>
+            </div>
+        </div>
+        <!-- زر مسح السلة -->
+        <button onclick="clearCart()" class="text-gray-300 hover:text-red-500 transition mx-4" title="إفراغ السلة">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+        </button>
+        <button onclick="sendOrder()" class="bg-gradient-to-r from-brand-red to-red-600 text-white font-black py-4 px-8 rounded-2xl shadow-lg shadow-red-200 flex items-center gap-2 transform active:scale-95 transition hover:shadow-xl">
+            <span>إتمام الطلب ✅</span>
+        </button>
+    </div>
+
+    <script>
+        let cart = {}; 
+        let totalAmount = 0;
+        const cartBar = document.getElementById('cartBar');
+        const cartCount = document.getElementById('cartCount');
+        const totalEl = document.getElementById('total');
+
+        // دالة خاصة لعمل تأثير بصري عند النقر على الكرت
+        function addToCartWithEffect(element, name, price) {
+            // إنشاء تأثير التموج (Ripple)
+            let ripple = document.createElement("span");
+            ripple.classList.add("ripple");
+            let rect = element.getBoundingClientRect();
+            // وضع التموج في وسط الكرت تقريباً أو مكان النقر (هنا نضعه وسط)
+            ripple.style.left = rect.width / 2 + "px";
+            ripple.style.top = rect.height / 2 + "px";
+            element.appendChild(ripple);
+            
+            setTimeout(() => { ripple.remove(); }, 600);
+
+            // إضافة الطلب
+            updateQty(name, price, 1);
+        }
+
+        function updateQty(name, price, change) {
+            if (!cart[name]) cart[name] = 0;
+            
+            cart[name] += change;
+            if (cart[name] < 0) cart[name] = 0;
+            
+            totalAmount += (price * change);
+            if(totalAmount < 0) totalAmount = 0;
+            
+            updateCardUI(name);
+            updateGlobalUI();
+            
+            // اهتزاز بسيط للموبايل
+            if(navigator.vibrate) navigator.vibrate(change > 0 ? 50 : 30);
+        }
+
+        function updateCardUI(name) {
+            const container = document.getElementById(`controls-${name}`);
+            if(!container) return;
+
+            const removeBtn = container.querySelector('.btn-remove');
+            const qtyDisplay = container.querySelector('.qty-display');
+            const addBtn = container.querySelector('.btn-add'); // يمكن تغيير ستايل زر الإضافة إذا كان هناك طلب
+            
+            const qty = cart[name];
+
+            if (qty > 0) {
+                removeBtn.classList.remove('hidden');
+                qtyDisplay.classList.remove('hidden');
+                qtyDisplay.innerText = qty;
+            } else {
+                removeBtn.classList.add('hidden');
+                qtyDisplay.classList.add('hidden');
+            }
+        }
+
+        function updateGlobalUI() {
+            let totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+            
+            totalEl.style.transform = 'scale(1.2)';
+            setTimeout(() => totalEl.style.transform = 'scale(1)', 150);
+            totalEl.innerText = totalAmount.toLocaleString();
+            
+            cartCount.innerText = totalItems;
+            
+            // إظهار/إخفاء عداد السلة العائم
+            if(totalItems > 0) {
+                cartCount.style.transform = 'scale(1)';
+                cartBar.classList.remove('translate-y-full');
+            } else {
+                cartCount.style.transform = 'scale(0)';
+                cartBar.classList.add('translate-y-full');
+            }
+        }
+
+        function clearCart() {
+            if(confirm('هل تريد إفراغ السلة بالكامل؟')) {
+                for(let key in cart) {
+                    cart[key] = 0;
+                    updateCardUI(key);
+                }
+                totalAmount = 0;
+                updateGlobalUI();
+            }
+        }
+        
+        function sendOrder() {
+            let itemsList = "";
+            let hasItems = false;
+            for (let item in cart) {
+                if (cart[item] > 0) {
+                    itemsList += `▪️ ${item} (عدد ${cart[item]})\n`;
+                    hasItems = true;
+                }
+            }
+
+            if(!hasItems) return;
+            
+            let msg = "مرحبا مطعم أهلاً وسهلاً، أريد طلب:\n";
+            msg += "-------------------\n";
+            msg += itemsList;
+            msg += "-------------------\n";
+            msg += `💰 *الإجمالي: ${totalAmount.toLocaleString()} ريال*\n`;
+            msg += `(من فضلك ضع موقعك هنا)`;
+            
+            window.open(`https://wa.me/967779100056?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+    </script>
+</body>
+</html>
