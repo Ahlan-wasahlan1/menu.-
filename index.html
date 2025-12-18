@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مطعم أهلاً وسهلاً  </title>
+    <title>مطعم أهلاً وسهلاً</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,8 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Markdown Parser for AI Responses -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -32,12 +34,21 @@
                     boxShadow: {
                         'soft': '0 5px 20px -5px rgba(0, 0, 0, 0.1)',
                         'floating': '0 10px 30px -5px rgba(192, 38, 38, 0.25)',
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'slide-up': 'slideUp 0.3s ease-out forwards'
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
                     }
                 }
             }
         }
     </script>
-
     <style>
         body { font-family: 'Cairo', sans-serif; padding-bottom: 140px; background-color: #fff7ed; -webkit-tap-highlight-color: transparent; }
         
@@ -62,12 +73,10 @@
         
         .btn-remove { background-color: white; color: #c02626; border: 2px solid #fee2e2; }
         .btn-remove:active { transform: scale(0.9); background-color: #fee2e2; }
-
         .qty-display { 
             font-weight: 800; font-size: 1.1rem; min-width: 24px; text-align: center; 
             color: #7f1d1d; 
         }
-
         /* جعل الكرت قابلاً للنقر بالكامل */
         .clickable-card { 
             position: relative; 
@@ -87,19 +96,60 @@
             pointer-events: none;
         }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
-
         .no-select { user-select: none; }
+
+        /* 🤖 AI Chat Styles - New Additions */
+        .chat-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4); 
+            backdrop-filter: blur(4px); z-index: 9999; 
+            display: none; justify-content: center; align-items: flex-end;
+        }
+        .chat-overlay.active { display: flex; animation: fadeIn 0.3s; }
+        .chat-box {
+            background: #fff; width: 100%; max-width: 500px; height: 85vh;
+            border-top-left-radius: 2rem; border-top-right-radius: 2rem;
+            display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .message { margin-bottom: 12px; max-width: 85%; line-height: 1.5; font-size: 0.95rem; position: relative; }
+        .message.ai { align-self: flex-start; background: #fff7ed; padding: 12px 16px; border-radius: 20px 20px 20px 4px; border: 1px solid #fed7aa; color: #431407; }
+        .message.user { align-self: flex-end; background: #c02626; color: white; padding: 10px 16px; border-radius: 20px 20px 4px 20px; box-shadow: 0 2px 5px rgba(192, 38, 38, 0.2); }
+        .typing-dot { display: inline-block; width: 6px; height: 6px; background: #c02626; border-radius: 50%; margin-right: 3px; animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        
+        /* Markdown Styles inside Chat */
+        .message.ai strong { color: #c02626; font-weight: 800; }
+        .message.ai p { margin-bottom: 6px; }
+        .message.ai ul { margin-right: 15px; list-style: disc; margin-bottom: 8px; }
+        
     </style>
 </head>
 <body class="text-gray-800 antialiased selection:bg-brand-red selection:text-white">
 
+    <!-- 📱 App Download Banner (New) -->
+    <div class="bg-gradient-to-r from-gray-900 to-gray-800 text-white px-4 py-2.5 flex justify-between items-center shadow-md relative z-[60]">
+        <div class="flex items-center gap-2">
+            <span class="text-lg">📲</span>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold leading-none mb-0.5">تجربة أفضل وأسرع</p>
+                <p class="text-xs font-bold text-white">حمل تطبيق المطعم الآن!</p>
+            </div>
+        </div>
+        <a href="https://median.co/share/yeejoqx#apk" target="_blank" class="bg-brand-gold text-brand-dark text-xs px-4 py-1.5 rounded-full font-black hover:bg-yellow-400 transition transform hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+            تنزيل التطبيق ↓
+        </a>
+    </div>
+
     <!-- Navbar -->
     <nav class="bg-white/95 backdrop-blur-xl text-brand-red shadow-sm sticky top-0 z-50 px-5 py-2 flex justify-between items-center rounded-b-3xl border-b border-orange-100/50">
         <div class="flex items-center gap-3">
-            <!-- 🔴🔴🔴 هنا التعديل: مكان اللوجو الجديد 🔴🔴🔴 -->
-            <!-- يجب أن تكون الصورة باسم logo.png وفي نفس المجلد -->
             <img src="https://i.postimg.cc/9MScVN85/Screenshot-20251216-113344-Whats-App.png" alt="شعار المطعم" class="w-14 h-14 rounded-2xl shadow-xl transform rotate-3 border-2 border-white object-cover">
-            
             <div class="font-extrabold text-xl tracking-wide text-brand-dark">أهلاً وسهلاً</div>
         </div>
         <a href="tel:967779100056" class="bg-brand-red text-white w-11 h-11 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform animate-pulse border-2 border-orange-200">
@@ -120,9 +170,18 @@
         </div>
     </header>
 
+    <!-- 🤖 AI Hook 1: The "Confused" Card (New) -->
+    <div onclick="openChat()" class="mx-5 -mt-8 mb-8 relative z-30 bg-white rounded-2xl shadow-floating border-2 border-orange-100 p-4 flex items-center gap-4 cursor-pointer transform hover:scale-[1.02] transition active:scale-95">
+        <div class="bg-brand-red/10 w-12 h-12 rounded-full flex items-center justify-center text-2xl animate-bounce-slow">🤔</div>
+        <div class="flex-1">
+            <h3 class="font-black text-brand-dark text-lg">محتار ايش تختار؟</h3>
+            <p class="text-xs text-gray-500 font-bold">اسأل "مساعدك الشخصي" واكتشف ذوقك!</p>
+        </div>
+        <div class="bg-brand-red text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">←</div>
+    </div>
+
     <!-- Menu Container -->
     <div class="container mx-auto px-4 py-8 space-y-12">
-
         <!-- 1. اللحوم والمشويات (Layout Optimized) -->
         <section>
             <div class="flex items-center gap-3 mb-6 px-1">
@@ -151,7 +210,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- صنف 2 -->
                 <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
                      onclick="addToCartWithEffect(this, 'كباب صنعاني', 4000)">
@@ -171,7 +229,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- صنف 3 -->
                 <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
                      onclick="addToCartWithEffect(this, 'أوصال لحم', 3500)">
@@ -191,7 +248,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- صنف 4 -->
                 <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
                      onclick="addToCartWithEffect(this, 'بروست', 1200)">
@@ -250,7 +306,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- عصيد -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'عصيد ومرق', 2000)">
@@ -265,7 +320,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- مطبق -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'مطبق', 600)">
@@ -309,7 +363,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- زربيان -->
                 <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
                      onclick="addToCartWithEffect(this, 'زربيان عدني', 4500)">
@@ -329,7 +382,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- برجر -->
                 <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
                      onclick="addToCartWithEffect(this, 'برجر', 1000)">
@@ -373,7 +425,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- تونة -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'سمك تونة', 1200)">
@@ -388,7 +439,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- شكشوكة (المستعادة) -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'شكشوكة', 800)">
@@ -403,7 +453,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- لحم صغار (المستعاد) -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'لحم صغار', 1000)">
@@ -444,7 +493,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- مانجو -->
                 <div class="clickable-card bg-yellow-50/50 border border-yellow-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'عصير مانجو', 800)">
@@ -461,7 +509,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- جوافة -->
                 <div class="clickable-card bg-green-50/50 border border-green-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'عصير جوافة', 700)">
@@ -478,7 +525,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- بيبسي -->
                 <div class="clickable-card bg-blue-50/50 border border-blue-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'بيبسي', 300)">
@@ -495,7 +541,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- برتقال (المعاد) -->
                 <div class="clickable-card bg-orange-50/50 border border-orange-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'عصير برتقال', 200)">
@@ -512,7 +557,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 7UP (المعاد) -->
                 <div class="clickable-card bg-teal-50/50 border border-teal-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, '7 UP', 300)">
@@ -531,6 +575,13 @@
                 </div>
             </div>
         </section>
+        
+        <!-- 🤖 AI Hook 2: The "Last Chance" Card (New) -->
+        <div onclick="openChat()" class="bg-gray-800 rounded-2xl p-5 text-center shadow-lg border-2 border-brand-gold relative overflow-hidden cursor-pointer group">
+            <div class="absolute inset-0 bg-brand-gold/10 group-hover:bg-brand-gold/20 transition"></div>
+            <h3 class="text-white font-black text-xl mb-1 relative z-10">مالقيت طلبك؟ أو تشتي شي مميز؟ 🍽️</h3>
+            <p class="text-brand-gold font-bold text-sm relative z-10">اسأل المستشار الذكي عن الخلطات السرية!</p>
+        </div>
     </div>
 
     <!-- Footer - Yemen Click -->
@@ -554,6 +605,14 @@
 
     <!-- Floating Actions -->
     <div class="fixed bottom-28 right-5 z-30 flex flex-col items-center gap-4">
+        <!-- 🤖 AI Floating Bubble (New) -->
+        <div onclick="openChat()" class="relative group cursor-pointer animate-slide-up">
+            <div class="bg-white text-brand-red p-3.5 rounded-full shadow-floating transform transition group-hover:scale-110 border-4 border-orange-100">
+                <span class="text-2xl">🤖</span>
+            </div>
+            <span class="absolute right-full mr-2 top-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition">المساعد الذكي</span>
+        </div>
+
         <!-- Cart Bubble -->
         <div class="relative group cursor-pointer" onclick="document.getElementById('cartBar').classList.remove('translate-y-full')">
             <div class="bg-gradient-to-tr from-brand-red to-orange-500 text-white p-4 rounded-full shadow-floating transform transition group-hover:scale-110 border-4 border-white">
@@ -590,56 +649,82 @@
         </button>
     </div>
 
+    <!-- 🤖 AI Chat Modal Interface (New) -->
+    <div id="aiChatModal" class="chat-overlay">
+        <div class="chat-box" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-brand-red to-orange-600 p-4 flex justify-between items-center text-white shadow-md">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 p-2 rounded-full backdrop-blur-sm">🤖</div>
+                    <div>
+                        <h3 class="font-black text-lg leading-none">مساعدك الذكي</h3>
+                        <span class="text-[10px] opacity-80">متصل الآن • أهلاً وسهلاً</span>
+                    </div>
+                </div>
+                <button onclick="closeChat()" class="bg-white/10 hover:bg-white/20 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
+            </div>
+            
+            <!-- Messages Area -->
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col gap-2">
+                <!-- Welcome Message -->
+                <div class="message ai">
+                    <p>حياك الله يا غالي! 👋<br>أنا المضيف الذكي لمطعم أهلاً وسهلاً.<br>آمرني.. محتار ايش تاكل؟ أو عندك أي سؤال في بالك؟ (حتى لو عن الفضاء! 🚀)</p>
+                </div>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="hidden px-6 py-2">
+                <div class="flex gap-1 bg-gray-100 w-fit px-3 py-2 rounded-full">
+                    <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-3 bg-white border-t border-gray-100 flex gap-2 items-center">
+                <input type="text" id="userChatInput" placeholder="اكتب سؤالك هنا..." 
+                       class="flex-1 bg-gray-100 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 transition border border-transparent"
+                       onkeypress="if(event.key === 'Enter') sendAIMessage()">
+                <button onclick="sendAIMessage()" class="bg-brand-red text-white w-12 h-12 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // --- Existing Cart Logic (UNCHANGED) ---
         let cart = {}; 
         let totalAmount = 0;
         const cartBar = document.getElementById('cartBar');
         const cartCount = document.getElementById('cartCount');
         const totalEl = document.getElementById('total');
 
-        // دالة خاصة لعمل تأثير بصري عند النقر على الكرت
         function addToCartWithEffect(element, name, price) {
-            // إنشاء تأثير التموج (Ripple)
             let ripple = document.createElement("span");
             ripple.classList.add("ripple");
             let rect = element.getBoundingClientRect();
-            // وضع التموج في وسط الكرت تقريباً أو مكان النقر (هنا نضعه وسط)
             ripple.style.left = rect.width / 2 + "px";
             ripple.style.top = rect.height / 2 + "px";
             element.appendChild(ripple);
-            
             setTimeout(() => { ripple.remove(); }, 600);
-
-            // إضافة الطلب
             updateQty(name, price, 1);
         }
-
         function updateQty(name, price, change) {
             if (!cart[name]) cart[name] = 0;
-            
             cart[name] += change;
             if (cart[name] < 0) cart[name] = 0;
-            
             totalAmount += (price * change);
             if(totalAmount < 0) totalAmount = 0;
-            
             updateCardUI(name);
             updateGlobalUI();
-            
-            // اهتزاز بسيط للموبايل
             if(navigator.vibrate) navigator.vibrate(change > 0 ? 50 : 30);
         }
-
         function updateCardUI(name) {
             const container = document.getElementById(`controls-${name}`);
             if(!container) return;
-
             const removeBtn = container.querySelector('.btn-remove');
             const qtyDisplay = container.querySelector('.qty-display');
-            const addBtn = container.querySelector('.btn-add'); // يمكن تغيير ستايل زر الإضافة إذا كان هناك طلب
-            
             const qty = cart[name];
-
             if (qty > 0) {
                 removeBtn.classList.remove('hidden');
                 qtyDisplay.classList.remove('hidden');
@@ -649,17 +734,12 @@
                 qtyDisplay.classList.add('hidden');
             }
         }
-
         function updateGlobalUI() {
             let totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
-            
             totalEl.style.transform = 'scale(1.2)';
             setTimeout(() => totalEl.style.transform = 'scale(1)', 150);
             totalEl.innerText = totalAmount.toLocaleString();
-            
             cartCount.innerText = totalItems;
-            
-            // إظهار/إخفاء عداد السلة العائم
             if(totalItems > 0) {
                 cartCount.style.transform = 'scale(1)';
                 cartBar.classList.remove('translate-y-full');
@@ -668,7 +748,6 @@
                 cartBar.classList.add('translate-y-full');
             }
         }
-
         function clearCart() {
             if(confirm('هل تريد إفراغ السلة بالكامل؟')) {
                 for(let key in cart) {
@@ -679,7 +758,6 @@
                 updateGlobalUI();
             }
         }
-        
         function sendOrder() {
             let itemsList = "";
             let hasItems = false;
@@ -689,20 +767,152 @@
                     hasItems = true;
                 }
             }
-
             if(!hasItems) return;
-            
             let msg = "مرحبا مطعم أهلاً وسهلاً، أريد طلب:\n";
             msg += "-------------------\n";
             msg += itemsList;
             msg += "-------------------\n";
             msg += `💰 *الإجمالي: ${totalAmount.toLocaleString()} ريال*\n`;
             msg += `(من فضلك ضع موقعك هنا)`;
-            
             window.open(`https://wa.me/967779100056?text=${encodeURIComponent(msg)}`, '_blank');
         }
-
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+
+        // --- 🤖 NEW: AI CHAT LOGIC ---
+        
+        // ⚠️ Security Note: In a real production app, never expose your API key in client-side code. 
+        // Use a backend proxy. For this demo, we use it directly as requested.
+        const GEMINI_API_KEY = "AIzaSyDMwQ8MhoJV02Dj_xJLlnV2MCFAqU-wGJw";
+        
+        // System Prompt: The Brain of the Yemeni Host
+        const SYSTEM_PROMPT = `
+        You are "The Smart Host" (المضيف الذكي) for "Ahlan Wasahlan Restaurant" in Yemen.
+        
+        **Your Personality:**
+        - Tone: Mix of Yemeni slang (يا غالي, يا زعيم, حياك) and professional politeness.
+        - Friendly, funny, and extremely helpful.
+        - You are an OPEN DOMAIN expert. You can answer questions about physics, history, jokes, or anything in the world.
+        
+        **CRITICAL RULES:**
+        1. ⛔ **NO INGREDIENTS:** If asked about ingredients, REFUSE politely. Say: "هذه خلطة أهلاً وسهلاً السرية، الطعم سيخبرك بالحكاية!" (Strict Rule).
+        2. **Menu Knowledge:** Use the menu below to answer food questions.
+        3. **Closing the Deal (Order):** If the user says "Confirm", "Order", "I want this", or agrees to a meal:
+           - Summarize the order clearly.
+           - END your message with the exact text token: [ORDER_READY]
+        4. **Credits (Marketing):** If the user asks "Who made you?", "Who coded this?", or about the app:
+           - Answer proudly that you were built by "Yemen Click".
+           - END your message with the exact text token: [CREDITS_TRIGGER]
+        
+        **MENU DATA:**
+        - Burgers: Max (1800), Double Cheese (1100), Egg/Cheese (850).
+        - Shawarma: Ahlan (1500), Rocket (1000), Sandwich (400).
+        - Chicken: Broasted Whole (5200), Half (2600), Mandi (3600), Haneeth (2400).
+        - Meat: Mandi Portion (3100), Haneeth Portion (2500), Mix Grill Large (7000).
+        - Drinks: Lemon (500), Mango (800), Pepsi (300).
+        `;
+
+        let chatHistory = [
+            { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
+            { role: "model", parts: [{ text: "تم، أنا جاهز يا زعيم! سأكون أفضل مضيف يمني." }] }
+        ];
+
+        function openChat() {
+            document.getElementById('aiChatModal').classList.add('active');
+            document.getElementById('userChatInput').focus();
+        }
+
+        function closeChat() {
+            document.getElementById('aiChatModal').classList.remove('active');
+        }
+
+        async function sendAIMessage() {
+            const inputField = document.getElementById('userChatInput');
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            // 1. Add User Message to UI
+            addMessageToUI(message, 'user');
+            inputField.value = '';
+            
+            // 2. Show Loading
+            const loading = document.getElementById('loadingIndicator');
+            loading.classList.remove('hidden');
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                // 3. Prepare History for API
+                chatHistory.push({ role: "user", parts: [{ text: message }] });
+
+                // 4. Call Google Gemini API
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: chatHistory })
+                });
+
+                const data = await response.json();
+                const reply = data.candidates[0].content.parts[0].text;
+
+                // 5. Hide Loading & Add AI Response
+                loading.classList.add('hidden');
+                
+                // Check for Special Triggers
+                let finalDisplayHtml = marked.parse(reply);
+                let extraButtons = "";
+
+                if (reply.includes("[ORDER_READY]")) {
+                    finalDisplayHtml = finalDisplayHtml.replace("[ORDER_READY]", "");
+                    extraButtons += `
+                        <div class="mt-3 border-t border-orange-200 pt-2">
+                            <p class="text-xs font-bold text-gray-500 mb-2">اضغط هنا لإرسال القائمة للمطعم:</p>
+                            <a href="https://wa.me/967779100056?text=${encodeURIComponent(reply.replace('[ORDER_READY]', ''))}" target="_blank" 
+                               class="block w-full text-center bg-[#25D366] text-white font-bold py-2 rounded-xl shadow-md hover:bg-green-600 transition">
+                               🚀 إرسال الطلب عبر واتساب
+                            </a>
+                        </div>
+                    `;
+                }
+
+                if (reply.includes("[CREDITS_TRIGGER]")) {
+                    finalDisplayHtml = finalDisplayHtml.replace("[CREDITS_TRIGGER]", "");
+                    extraButtons += `
+                        <div class="mt-3 bg-stone-100 p-3 rounded-xl border border-stone-200">
+                            <p class="text-xs font-bold text-gray-600 mb-2">تواصل مع المبرمج مباشرة:</p>
+                            <a href="https://wa.me/967775904946?text=السلام%20عليكم%20يا%20مبدع..%20شفت%20الذكاء%20الاصطناعي%20وعجبني" target="_blank" 
+                               class="flex items-center justify-center gap-2 w-full bg-brand-dark text-white font-bold py-2 rounded-lg shadow-sm hover:bg-black transition">
+                               <span>👨‍💻 تواصل مع Yemen Click</span>
+                            </a>
+                        </div>
+                    `;
+                }
+
+                addMessageToUI(finalDisplayHtml + extraButtons, 'ai', true);
+                
+                // Update History
+                chatHistory.push({ role: "model", parts: [{ text: reply }] });
+
+            } catch (error) {
+                console.error(error);
+                loading.classList.add('hidden');
+                addMessageToUI("المعذرة يا غالي، الشبكة ضعيفة شوية.. جرب مرة ثانية!", 'ai');
+            }
+        }
+
+        function addMessageToUI(content, type, isHtml = false) {
+            const container = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${type}`;
+            
+            if (isHtml) {
+                msgDiv.innerHTML = content;
+            } else {
+                msgDiv.innerText = content;
+            }
+            
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
     </script>
 </body>
 </html>
