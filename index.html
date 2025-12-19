@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مطعم أهلاً وسهلاً  </title>
+    <title>مطعم أهلاً وسهلاً</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,16 +32,25 @@
                     boxShadow: {
                         'soft': '0 5px 20px -5px rgba(0, 0, 0, 0.1)',
                         'floating': '0 10px 30px -5px rgba(192, 38, 38, 0.25)',
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'slide-up': 'slideUp 0.3s ease-out forwards'
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
                     }
                 }
             }
         }
     </script>
-
     <style>
         body { font-family: 'Cairo', sans-serif; padding-bottom: 140px; background-color: #fff7ed; -webkit-tap-highlight-color: transparent; }
         
-        /* تحسين الصور لتناسب التصميم الجديد */
+        /* تحسين الصور */
         .food-img { width: 110px; height: 110px; object-fit: cover; border-radius: 16px; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .drink-img { height: 90px; width: 100%; object-fit: contain; padding: 5px; }
         
@@ -62,12 +71,10 @@
         
         .btn-remove { background-color: white; color: #c02626; border: 2px solid #fee2e2; }
         .btn-remove:active { transform: scale(0.9); background-color: #fee2e2; }
-
         .qty-display { 
             font-weight: 800; font-size: 1.1rem; min-width: 24px; text-align: center; 
             color: #7f1d1d; 
         }
-
         /* جعل الكرت قابلاً للنقر بالكامل */
         .clickable-card { 
             position: relative; 
@@ -87,19 +94,29 @@
             pointer-events: none;
         }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
-
         .no-select { user-select: none; }
     </style>
 </head>
 <body class="text-gray-800 antialiased selection:bg-brand-red selection:text-white">
 
+    <!-- 📱 App Download Banner (Protected) -->
+    <div class="bg-gradient-to-r from-gray-900 to-gray-800 text-white px-4 py-2.5 flex justify-between items-center shadow-md relative z-[60]">
+        <div class="flex items-center gap-2">
+            <span class="text-lg">📲</span>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold leading-none mb-0.5">تجربة أفضل وأسرع</p>
+                <p class="text-xs font-bold text-white">حمل تطبيق المطعم الآن!</p>
+            </div>
+        </div>
+        <a href="https://median.co/share/yeejoqx#apk" target="_blank" class="bg-brand-gold text-brand-dark text-xs px-4 py-1.5 rounded-full font-black hover:bg-yellow-400 transition transform hover:scale-105 shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+            تنزيل التطبيق ↓
+        </a>
+    </div>
+
     <!-- Navbar -->
     <nav class="bg-white/95 backdrop-blur-xl text-brand-red shadow-sm sticky top-0 z-50 px-5 py-2 flex justify-between items-center rounded-b-3xl border-b border-orange-100/50">
         <div class="flex items-center gap-3">
-            <!-- 🔴🔴🔴 هنا التعديل: مكان اللوجو الجديد 🔴🔴🔴 -->
-            <!-- يجب أن تكون الصورة باسم logo.png وفي نفس المجلد -->
             <img src="https://i.postimg.cc/9MScVN85/Screenshot-20251216-113344-Whats-App.png" alt="شعار المطعم" class="w-14 h-14 rounded-2xl shadow-xl transform rotate-3 border-2 border-white object-cover">
-            
             <div class="font-extrabold text-xl tracking-wide text-brand-dark">أهلاً وسهلاً</div>
         </div>
         <a href="tel:967779100056" class="bg-brand-red text-white w-11 h-11 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform animate-pulse border-2 border-orange-200">
@@ -122,8 +139,7 @@
 
     <!-- Menu Container -->
     <div class="container mx-auto px-4 py-8 space-y-12">
-
-        <!-- 1. اللحوم والمشويات (Layout Optimized) -->
+        <!-- 1. اللحوم والمشويات -->
         <section>
             <div class="flex items-center gap-3 mb-6 px-1">
                 <span class="text-3xl filter drop-shadow-sm">🔥</span>
@@ -151,7 +167,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- صنف 2 -->
                 <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
                      onclick="addToCartWithEffect(this, 'كباب صنعاني', 4000)">
@@ -171,7 +186,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- صنف 3 -->
                 <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
                      onclick="addToCartWithEffect(this, 'أوصال لحم', 3500)">
@@ -191,7 +205,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- صنف 4 -->
                 <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
                      onclick="addToCartWithEffect(this, 'بروست', 1200)">
@@ -250,7 +263,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- عصيد -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'عصيد ومرق', 2000)">
@@ -265,7 +277,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- مطبق -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'مطبق', 600)">
@@ -309,7 +320,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- زربيان -->
                 <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
                      onclick="addToCartWithEffect(this, 'زربيان عدني', 4500)">
@@ -329,7 +339,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- برجر -->
                 <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
                      onclick="addToCartWithEffect(this, 'برجر', 1000)">
@@ -373,7 +382,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- تونة -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'سمك تونة', 1200)">
@@ -388,7 +396,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- شكشوكة (المستعادة) -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'شكشوكة', 800)">
@@ -403,7 +410,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- لحم صغار (المستعاد) -->
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, 'لحم صغار', 1000)">
@@ -444,7 +450,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- مانجو -->
                 <div class="clickable-card bg-yellow-50/50 border border-yellow-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'عصير مانجو', 800)">
@@ -461,7 +466,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- جوافة -->
                 <div class="clickable-card bg-green-50/50 border border-green-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'عصير جوافة', 700)">
@@ -478,7 +482,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- بيبسي -->
                 <div class="clickable-card bg-blue-50/50 border border-blue-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'بيبسي', 300)">
@@ -495,7 +498,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- برتقال (المعاد) -->
                 <div class="clickable-card bg-orange-50/50 border border-orange-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, 'عصير برتقال', 200)">
@@ -512,7 +514,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 7UP (المعاد) -->
                 <div class="clickable-card bg-teal-50/50 border border-teal-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, '7 UP', 300)">
@@ -531,6 +532,7 @@
                 </div>
             </div>
         </section>
+        
     </div>
 
     <!-- Footer - Yemen Click -->
@@ -591,55 +593,39 @@
     </div>
 
     <script>
+        // --- Logic for Cart & Orders (No AI Code Here) ---
         let cart = {}; 
         let totalAmount = 0;
         const cartBar = document.getElementById('cartBar');
         const cartCount = document.getElementById('cartCount');
         const totalEl = document.getElementById('total');
 
-        // دالة خاصة لعمل تأثير بصري عند النقر على الكرت
         function addToCartWithEffect(element, name, price) {
-            // إنشاء تأثير التموج (Ripple)
             let ripple = document.createElement("span");
             ripple.classList.add("ripple");
             let rect = element.getBoundingClientRect();
-            // وضع التموج في وسط الكرت تقريباً أو مكان النقر (هنا نضعه وسط)
             ripple.style.left = rect.width / 2 + "px";
             ripple.style.top = rect.height / 2 + "px";
             element.appendChild(ripple);
-            
             setTimeout(() => { ripple.remove(); }, 600);
-
-            // إضافة الطلب
             updateQty(name, price, 1);
         }
-
         function updateQty(name, price, change) {
             if (!cart[name]) cart[name] = 0;
-            
             cart[name] += change;
             if (cart[name] < 0) cart[name] = 0;
-            
             totalAmount += (price * change);
             if(totalAmount < 0) totalAmount = 0;
-            
             updateCardUI(name);
             updateGlobalUI();
-            
-            // اهتزاز بسيط للموبايل
             if(navigator.vibrate) navigator.vibrate(change > 0 ? 50 : 30);
         }
-
         function updateCardUI(name) {
             const container = document.getElementById(`controls-${name}`);
             if(!container) return;
-
             const removeBtn = container.querySelector('.btn-remove');
             const qtyDisplay = container.querySelector('.qty-display');
-            const addBtn = container.querySelector('.btn-add'); // يمكن تغيير ستايل زر الإضافة إذا كان هناك طلب
-            
             const qty = cart[name];
-
             if (qty > 0) {
                 removeBtn.classList.remove('hidden');
                 qtyDisplay.classList.remove('hidden');
@@ -649,17 +635,12 @@
                 qtyDisplay.classList.add('hidden');
             }
         }
-
         function updateGlobalUI() {
             let totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
-            
             totalEl.style.transform = 'scale(1.2)';
             setTimeout(() => totalEl.style.transform = 'scale(1)', 150);
             totalEl.innerText = totalAmount.toLocaleString();
-            
             cartCount.innerText = totalItems;
-            
-            // إظهار/إخفاء عداد السلة العائم
             if(totalItems > 0) {
                 cartCount.style.transform = 'scale(1)';
                 cartBar.classList.remove('translate-y-full');
@@ -668,7 +649,6 @@
                 cartBar.classList.add('translate-y-full');
             }
         }
-
         function clearCart() {
             if(confirm('هل تريد إفراغ السلة بالكامل؟')) {
                 for(let key in cart) {
@@ -679,7 +659,6 @@
                 updateGlobalUI();
             }
         }
-        
         function sendOrder() {
             let itemsList = "";
             let hasItems = false;
@@ -689,20 +668,17 @@
                     hasItems = true;
                 }
             }
-
             if(!hasItems) return;
-            
             let msg = "مرحبا مطعم أهلاً وسهلاً، أريد طلب:\n";
             msg += "-------------------\n";
             msg += itemsList;
             msg += "-------------------\n";
             msg += `💰 *الإجمالي: ${totalAmount.toLocaleString()} ريال*\n`;
             msg += `(من فضلك ضع موقعك هنا)`;
-            
             window.open(`https://wa.me/967779100056?text=${encodeURIComponent(msg)}`, '_blank');
         }
-
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
     </script>
 </body>
-                </html>
+</html>
+
