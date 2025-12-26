@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مطعم أهلاً وسهلاً</title>
     
     <!-- Fonts -->
@@ -26,22 +26,14 @@
                             red: '#c02626',
                             dark: '#7f1d1d',
                             gold: '#f59e0b',
-                            bg: '#fff7ed'
+                            bg: '#fff7ed',
+                            orange: '#ffedd5'
                         }
                     },
                     boxShadow: {
                         'soft': '0 5px 20px -5px rgba(0, 0, 0, 0.1)',
                         'floating': '0 10px 30px -5px rgba(192, 38, 38, 0.25)',
-                    },
-                    animation: {
-                        'bounce-slow': 'bounce 3s infinite',
-                        'slide-up': 'slideUp 0.3s ease-out forwards'
-                    },
-                    keyframes: {
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        }
+                        'glow': '0 0 15px rgba(245, 158, 11, 0.3)'
                     }
                 }
             }
@@ -49,8 +41,9 @@
     </script>
     <style>
         body { font-family: 'Cairo', sans-serif; padding-bottom: 140px; background-color: #fff7ed; -webkit-tap-highlight-color: transparent; }
+        
+        /* General Styles */
         .food-img { width: 110px; height: 110px; object-fit: cover; border-radius: 16px; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .drink-img { height: 90px; width: 100%; object-fit: contain; padding: 5px; }
         .btn-control { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 900; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
         .btn-add { background-color: #c02626; color: white; border: none; }
         .btn-add:active { transform: scale(0.9); background-color: #991b1b; }
@@ -59,9 +52,59 @@
         .qty-display { font-weight: 800; font-size: 1.1rem; min-width: 24px; text-align: center; color: #7f1d1d; }
         .clickable-card { position: relative; transition: transform 0.2s; cursor: pointer; overflow: hidden; }
         .clickable-card:active { transform: scale(0.98); background-color: #fff1f2; }
-        .ripple { position: absolute; background: rgba(192, 38, 38, 0.1); border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
-        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
-        .no-select { user-select: none; }
+        
+        /* Tab Switcher */
+        .tab-switcher { background: #e5e7eb; padding: 5px; border-radius: 16px; display: flex; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .tab-btn { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; transition: all 0.3s ease; text-align: center; font-size: 0.95rem; }
+        .tab-btn.active { background: white; color: #c02626; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: scale(1.02); }
+        .tab-btn.inactive { color: #6b7280; }
+        
+        /* 🔥 NEW CATEGORY CARD STYLES (Professional Image Cards) */
+        .cat-card-new { 
+            position: relative; 
+            height: 140px; /* ارتفاع ثابت للكرت */
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15); 
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .cat-card-new:active { transform: scale(0.96); }
+        
+        .cat-card-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .cat-card-new:hover .cat-card-bg { transform: scale(1.1); }
+        
+        .cat-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 15px;
+        }
+        
+        .cat-title {
+            color: white;
+            font-family: 'Aref Ruqaa', serif;
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .menu-item-new { background: white; padding: 12px; border-radius: 16px; border-bottom: 2px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+        .menu-price-new { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; }
+        .hidden-view { display: none; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="text-gray-800 antialiased selection:bg-brand-red selection:text-white">
@@ -104,78 +147,98 @@
         </div>
     </header>
 
-    <!-- Menu Container -->
-    <div class="container mx-auto px-4 py-8 space-y-12">
-        <!-- سيتم تعبئة الأقسام تلقائياً هنا -->
-        <section id="section-grills"></section>
-        <section id="section-folk"></section>
-        <section id="section-rice"></section>
-        <section id="section-edam"></section>
-        <section id="section-drinks"></section>
+    <!-- Tab Switcher -->
+    <div class="px-4 mt-6 sticky top-[80px] z-40">
+        <div class="tab-switcher">
+            <button onclick="switchView('main')" id="btn-main" class="tab-btn active">
+                القائمة الرئيسية 📋
+            </button>
+            <button onclick="switchView('categories')" id="btn-categories" class="tab-btn inactive">
+                أقسام الطعام 🍽️
+            </button>
+        </div>
     </div>
 
-    <!-- Footer - Yemen Click -->
+    <!-- MAIN CONTAINER -->
+    <div class="container mx-auto px-4 py-6">
+
+        <!-- VIEW 1: Original Main Page -->
+        <div id="view-main" class="fade-in space-y-12">
+            <section id="section-grills"></section>
+            <section id="section-folk"></section>
+            <section id="section-rice"></section>
+            <section id="section-edam"></section>
+            <section id="section-drinks"></section>
+        </div>
+
+        <!-- VIEW 2: New Full Menu (With Images) -->
+        <div id="view-categories" class="hidden-view fade-in">
+            <!-- شبكة الأقسام بالصور -->
+            <div id="categories-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                <!-- سيتم تعبئتها تلقائياً -->
+            </div>
+
+            <!-- عرض تفاصيل القسم -->
+            <div id="category-detail" class="hidden-view">
+                <button onclick="showCategoriesGrid()" class="mb-4 bg-white text-brand-red px-5 py-2 rounded-full shadow-sm font-bold flex items-center gap-2 hover:bg-gray-50">
+                    <span>🔙 رجوع للأقسام</span>
+                </button>
+                <div class="relative h-32 rounded-2xl overflow-hidden mb-5 shadow-md">
+                    <img id="cat-header-img" src="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <h3 id="cat-detail-title" class="font-ruqaa text-4xl text-white drop-shadow-lg"></h3>
+                    </div>
+                </div>
+
+                <!-- قائمة الطعام الكاملة -->
+                <div id="full-menu-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
     <div class="bg-gradient-to-b from-transparent to-stone-100 border-t border-gray-200 py-6 text-center mt-8 rounded-t-[3rem]">
         <p class="text-xs text-gray-400 mb-4">جميع الحقوق محفوظة © لمطعم أهلاً وسهلاً 2025</p>
         <div class="flex justify-center items-center">
-            <a href="https://wa.me/967775904946?text=السلام%20عليكم%20فريق%20YemenClick%20..%20أريد%20تصميم%20موقع%20احترافي"
-               target="_blank"
-               class="group relative bg-stone-200 hover:bg-stone-300 text-gray-700 px-6 py-2 rounded-xl shadow-sm hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
-                <div class="text-right">
-                    <span class="text-[10px] text-gray-500 block group-hover:text-brand-gold transition">Powered By</span>
-                    <span class="font-bold tracking-wider text-sm">YEMEN CLICK 🚀</span>
-                </div>
-                <div class="h-8 w-8 bg-stone-300 group-hover:bg-brand-gold group-hover:text-white text-gray-600 rounded-full flex items-center justify-center transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                </div>
-            </a>
+            <a href="https://wa.me/967775904946" target="_blank" class="bg-stone-200 text-gray-700 px-6 py-2 rounded-xl shadow-sm text-xs font-bold">Powered By YEMEN CLICK 🚀</a>
         </div>
     </div>
 
     <!-- Floating Actions -->
     <div class="fixed bottom-28 right-5 z-30 flex flex-col items-center gap-4">
-        <!-- Cart Bubble -->
         <div class="relative group cursor-pointer" onclick="document.getElementById('cartBar').classList.remove('translate-y-full')">
-            <div class="bg-gradient-to-tr from-brand-red to-orange-500 text-white p-4 rounded-full shadow-floating transform transition group-hover:scale-110 border-4 border-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
+            <div class="bg-gradient-to-tr from-brand-red to-orange-500 text-white p-4 rounded-full shadow-floating border-4 border-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
             </div>
             <span id="cartCount" class="absolute -top-1 -left-1 bg-white text-brand-red w-6 h-6 rounded-full flex items-center justify-center text-xs font-black border-2 border-orange-100 shadow-md transform scale-0 transition-transform duration-300">0</span>
         </div>
-        <!-- WhatsApp Bubble -->
-        <a href="https://wa.me/967779100056?text=السلام%20عليكم%20عندي%20استفسار"
-           class="bg-[#25D366] text-white p-4 rounded-full shadow-floating hover:scale-110 transition border-4 border-white">
+        <a href="https://wa.me/967779100056" class="bg-[#25D366] text-white p-4 rounded-full shadow-floating border-4 border-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
         </a>
     </div>
 
     <!-- Sticky Cart Bar -->
-    <div id="cartBar" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl text-gray-800 p-5 rounded-t-[2.5rem] shadow-[0_-10px_60px_rgba(0,0,0,0.15)] transform translate-y-full transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1) z-50 flex justify-between items-center border-t border-gray-100">
+    <div id="cartBar" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl text-gray-800 p-5 rounded-t-[2.5rem] shadow-[0_-10px_60px_rgba(0,0,0,0.15)] transform translate-y-full transition-transform duration-500 z-50 flex justify-between items-center border-t border-gray-100">
         <div class="flex flex-col">
             <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">المجموع الكلي</span>
             <div class="font-black text-4xl text-brand-red flex items-baseline gap-1 mt-1">
                 <span id="total">0</span> <span class="text-sm font-bold text-gray-400">ر.ي</span>
             </div>
         </div>
-        <button onclick="clearCart()" class="text-gray-300 hover:text-red-500 transition mx-4" title="إفراغ السلة">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-        </button>
-        <button onclick="sendOrder()" class="bg-gradient-to-r from-brand-red to-red-600 text-white font-black py-4 px-8 rounded-2xl shadow-lg shadow-red-200 flex items-center gap-2 transform active:scale-95 transition hover:shadow-xl">
+        <button onclick="clearCart()" class="text-gray-300 hover:text-red-500 transition mx-4">🗑️</button>
+        <button onclick="sendOrder()" class="bg-gradient-to-r from-brand-red to-red-600 text-white font-black py-4 px-8 rounded-2xl shadow-lg flex items-center gap-2 transform active:scale-95 transition">
             <span>إتمام الطلب ✅</span>
         </button>
     </div>
 
     <script>
         // ==========================================
-        // 🛠️ لوحة التحكم: عدل الأسعار والبيانات هنا فقط 🛠️
+        // 1. DATA: Original Menu (No Changes)
         // ==========================================
-        const menuData = {
+        const originalMenu = {
             grills: {
-                title: "اللحوم والمشويات",
-                icon: "🔥",
+                title: "اللحوم والمشويات", icon: "🔥",
                 items: [
                     { name: 'دجاج شواية', price: 3500, desc: 'تحمير ذهبي مع الرز', img: 'https://i.postimg.cc/c4cw1RSk/sddefault-(4).jpg' },
                     { name: 'كباب صنعاني', price: 4000, desc: 'لحم بلدي طازج', img: 'https://i.postimg.cc/x8TwDpQV/kabab-Sanani-1.jpg' },
@@ -184,8 +247,7 @@
                 ]
             },
             folk: {
-                title: "الأكل الشعبي",
-                icon: "🍲",
+                title: "الأكل الشعبي", icon: "🍲",
                 items: [
                     { name: 'سلتة صنعانية', price: 1500, img: 'https://i.postimg.cc/tTc1WW7p/Almawqea2021-12-20-08-38-53-447539.jpg' },
                     { name: 'فحسة لحم', price: 2500, img: 'https://i.postimg.cc/SxFRfmds/fhsh.webp' },
@@ -194,8 +256,7 @@
                 ]
             },
             rice: {
-                title: "الأرز والولائم",
-                icon: "🍚",
+                title: "الأرز والولائم", icon: "🍚",
                 items: [
                     { name: 'مندي لحم تيس', price: 8500, desc: 'من التنور رأساً إليك', img: 'https://i.postimg.cc/4xhb24pp/maxresdefault.jpg' },
                     { name: 'زربيان عدني', price: 4500, desc: 'بالزبادي والبهارات', img: 'https://i.postimg.cc/9F9rvDNz/maxresdefault-(2).jpg' },
@@ -203,8 +264,7 @@
                 ]
             },
             edam: {
-                title: "الإدامات",
-                icon: "🥘",
+                title: "الإدامات", icon: "🥘",
                 items: [
                     { name: 'فاصوليا', price: 1000, img: 'https://i.postimg.cc/sDKpg6RB/sddefault-(2).jpg' },
                     { name: 'سمك تونة', price: 1200, img: 'https://i.postimg.cc/6QzsjNsf/Screenshot-20251215-141250-Maps.jpg' },
@@ -213,8 +273,7 @@
                 ]
             },
             drinks: {
-                title: "عصائر ومشروبات",
-                icon: "🥤",
+                title: "عصائر ومشروبات", icon: "🥤",
                 items: [
                     { name: 'عصير ليمون', price: 150, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200&q=80', color: 'lime' },
                     { name: 'عصير مانجو', price: 300, img: 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=200&q=80', color: 'yellow' },
@@ -227,10 +286,144 @@
         };
 
         // ==========================================
-        // ⚙️ المحرك البرمجي (تمت برمجته ليطابق تصميمك 100%) ⚙️
+        // 2. DATA: Full Menu UPDATED (With User Images)
         // ==========================================
+        const fullMenu = {
+            burger: {
+                title: "قسم البرجر", 
+                // الصورة من المستخدم
+                img: "https://i.ibb.co/MxHKwrX1/Best-Burgers-in-Ras-Al-Khaimah-Cover-28-092025ar.jpg",
+                items: [
+                    { name: 'برجر أهلاً وسهلاً ماكس', price: 1800 },
+                    { name: 'برجر أهلاً وسهلاً', price: 1300 },
+                    { name: 'برجر دبل جبن', price: 1100 },
+                    { name: 'برجر دبل بيض', price: 1000 },
+                    { name: 'برجر دبل (بيض + جبن)', price: 1100 },
+                    { name: 'برجر دبل جبن + بيض (حجم مختلف)', price: 950 },
+                    { name: 'برجر دبل جبن', price: 900 },
+                    { name: 'برجر بيض + جبن', price: 850 },
+                    { name: 'برجر جبن', price: 800 },
+                    { name: 'برجر بيض', price: 750 },
+                    { name: 'برجر عادي', price: 700 }
+                ]
+            },
+            shawarma: {
+                title: "قسم الشاورما", 
+                // الصورة من المستخدم
+                img: "https://i.postimg.cc/ZqCwdVWN/maxresdefault-(4).jpg",
+                items: [
+                    { name: 'شاورما أهلاً وسهلاً', price: 1500 },
+                    { name: 'صحن شاورما عربي', price: 1300 },
+                    { name: 'شاورما صاروخ دبل جبن', price: 1000 },
+                    { name: 'ساندوتش شاورما أهلاً وسهلاً', price: 800 },
+                    { name: 'شاورما صغير دبل جبن', price: 600 },
+                    { name: 'شاورما صغير بالجبن', price: 500 },
+                    { name: 'ساندوتش شاورما', price: 400 }
+                ]
+            },
+            chicken: {
+                title: "قسم الدجاج", 
+                // الصورة من المستخدم (GIF)
+                img: "https://i.postimg.cc/htHd2rCn/roz-o-dajaj.gif",
+                items: [
+                    { name: 'حبة دجاج بروست', price: 5200 },
+                    { name: 'نصف دجاج بروست', price: 2600 },
+                    { name: 'ربع دجاج بروست', price: 1300 },
+                    { name: 'حبة دجاج شواية', price: 2200 },
+                    { name: 'نصف دجاج شواية', price: 1100 },
+                    { name: 'ربع دجاج شواية', price: 550 },
+                    { name: 'حبة دجاج مندي مع الأرز', price: 3600 },
+                    { name: 'حبة دجاج حنيذ', price: 2400 },
+                    { name: 'نصف دجاجة فحم', price: 1200 },
+                    { name: 'ربع دجاجة (فحم / حنيذ / مضغوط / مندي)', price: 600 }
+                ]
+            },
+            meat: {
+                title: "اللحوم والمشاوي", 
+                // الصورة من المستخدم
+                img: "https://i.postimg.cc/15XVPT26/hq720-(2).jpg",
+                items: [
+                    { name: 'ربع ذبيحة لحم مندي مع الأرز', price: 11800 },
+                    { name: 'نفر مشكل مشاوي أهلاً (كبير)', price: 7000 },
+                    { name: 'نفر مشكل مشاوي أهلاً (صغير)', price: 3500 },
+                    { name: 'نفر مشكل مشاوي', price: 3000 },
+                    { name: 'نفر لحم مندي مع الأرز', price: 3100 },
+                    { name: 'نفر لحم حنيذ', price: 2500 },
+                    { name: 'نفر لحم أوصال (2 سيخ)', price: 1600 },
+                    { name: 'رؤوس غنم حنيذ', price: 1500 },
+                    { name: 'نص نفر كباب لحم', price: 700 }
+                ]
+            },
+            sides: {
+                title: "الأرز ", 
+                // الصورة من المستخدم
+                img: "https://i.postimg.cc/HxTjNPXf/mndy-djaj.webp",
+                items: [
+                    { name: 'بيتزا أهلاً كبير', price: 3000 },
+                    { name: 'نفر ونصف رز (أبيض / مضغوط)', price: 900 },
+                    { name: 'نفر ونصف مشكل عادي / محشي', price: 900 },
+                    { name: 'نفر رز أبيض', price: 600 },
+                    { name: 'نفر ونصف ملوخية', price: 600 },
+                    { name: 'مشكل فرن', price: 600 },
+                    { name: 'نفر ونصف شعيرة', price: 450 },
+                    { name: 'نص نفر رز أبيض', price: 300 },
+                    { name: 'نفر شعيرة', price: 300 },
+                    { name: 'شطة ظروف', price: 50 },
+                    { name: 'نص كيس خبز', price: 50 }
+                ]
+            }
+        };
 
-        function renderAllSections() {
+        // ==========================================
+        // 🛠️ HAPTIC FEEDBACK ENGINE (System Logic)
+        // ==========================================
+        const Haptic = {
+            light: () => {
+                if(navigator.vibrate) navigator.vibrate(10); 
+            },
+            medium: () => {
+                if(navigator.vibrate) navigator.vibrate(25);
+            },
+            heavy: () => {
+                // اهتزاز مزدوج قوي عند فتح قسم
+                if(navigator.vibrate) navigator.vibrate([40, 50, 20]);
+            }
+        };
+
+        window.onload = function() {
+            renderOriginalPage();
+            renderCategoriesGrid();
+        };
+
+        function switchView(view) {
+            Haptic.medium(); // اهتزاز عند التبديل
+            const btnMain = document.getElementById('btn-main');
+            const btnCats = document.getElementById('btn-categories');
+            const viewMain = document.getElementById('view-main');
+            const viewCats = document.getElementById('view-categories');
+
+            if(view === 'main') {
+                viewMain.style.display = 'block';
+                viewCats.style.display = 'none';
+                viewMain.classList.add('fade-in');
+                
+                btnMain.classList.add('active');
+                btnMain.classList.remove('inactive');
+                btnCats.classList.remove('active');
+                btnCats.classList.add('inactive');
+            } else {
+                viewMain.style.display = 'none';
+                viewCats.style.display = 'block';
+                viewCats.classList.add('fade-in');
+                showCategoriesGrid();
+                btnCats.classList.add('active');
+                btnCats.classList.remove('inactive');
+                btnMain.classList.remove('active');
+                btnMain.classList.add('inactive');
+            }
+        }
+
+        function renderOriginalPage() {
             renderSection('grills', 'horizontal');
             renderSection('folk', 'vertical');
             renderSection('rice', 'large');
@@ -239,18 +432,14 @@
         }
 
         function renderSection(sectionKey, type) {
-            const sectionData = menuData[sectionKey];
+            const sectionData = originalMenu[sectionKey];
             const sectionEl = document.getElementById(`section-${sectionKey}`);
-            
-            // 1. رسم العنوان (Header) بنفس تنسيقك
             let html = `
                 <div class="flex items-center gap-3 mb-6 px-1">
                     <span class="text-3xl filter drop-shadow-sm">${sectionData.icon}</span>
                     <h3 class="font-black text-2xl text-brand-dark">${sectionData.title}</h3>
-                </div>
-            `;
-
-            // 2. رسم الشبكة (Grid) حسب النوع
+                </div>`;
+            
             let gridClass = "";
             if (type === 'horizontal') gridClass = "grid grid-cols-1 md:grid-cols-2 gap-5";
             else if (type === 'vertical' || type === 'edam') gridClass = "grid grid-cols-2 gap-4";
@@ -258,19 +447,13 @@
             else if (type === 'mini') gridClass = "grid grid-cols-2 md:grid-cols-4 gap-3";
 
             html += `<div class="${gridClass}">`;
-
-            // 3. رسم الكروت (Cards)
             html += sectionData.items.map(item => getCardHTML(item, type)).join('');
             html += `</div>`;
-
             sectionEl.innerHTML = html;
         }
 
         function getCardHTML(item, type) {
-            const safeName = item.name.replace(/\s+/g, '-');
-            const priceFormatted = item.price.toLocaleString('en-US'); // توحيد الأرقام
-            const itemJSON = JSON.stringify(item).replace(/"/g, '&quot;'); // لتمرير البيانات
-
+            const itemJSON = JSON.stringify(item).replace(/"/g, '&quot;');
             if (type === 'horizontal') {
                 return `
                 <div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center"
@@ -287,8 +470,7 @@
                         </div>
                     </div>
                 </div>`;
-            } 
-            else if (type === 'vertical') {
+            } else if (type === 'vertical') {
                 return `
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center"
                      onclick="addToCartWithEffect(this, '${item.name}', ${item.price})">
@@ -299,8 +481,7 @@
                         ${getControlsHTML(item.name, item.price, true)}
                     </div>
                 </div>`;
-            }
-            else if (type === 'large') {
+            } else if (type === 'large') {
                 return `
                 <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse"
                      onclick="addToCartWithEffect(this, '${item.name}', ${item.price})">
@@ -316,8 +497,7 @@
                         </div>
                     </div>
                 </div>`;
-            }
-            else if (type === 'mini') {
+            } else if (type === 'mini') {
                 return `
                 <div class="clickable-card bg-${item.color}-50/50 border border-${item.color}-100 p-2 rounded-3xl text-center"
                      onclick="addToCartWithEffect(this, '${item.name}', ${item.price})">
@@ -333,10 +513,59 @@
             }
         }
 
+        // --- NEW CATEGORIES RENDER (With Images) ---
+        function renderCategoriesGrid() {
+            const grid = document.getElementById('categories-grid');
+            grid.innerHTML = Object.keys(fullMenu).map(key => {
+                const cat = fullMenu[key];
+                return `
+                <div class="cat-card-new" onclick="openCategory('${key}')">
+                    <img src="${cat.img}" class="cat-card-bg">
+                    <div class="cat-overlay">
+                        <h3 class="cat-title">${cat.title}</h3>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function showCategoriesGrid() {
+            document.getElementById('categories-grid').style.display = 'grid';
+            document.getElementById('category-detail').style.display = 'none';
+        }
+
+        function openCategory(key) {
+            Haptic.heavy(); // اهتزاز قوي عند الدخول للقسم
+            const cat = fullMenu[key];
+            const detailView = document.getElementById('category-detail');
+            const listContainer = document.getElementById('full-menu-list');
+            
+            document.getElementById('categories-grid').style.display = 'none';
+            detailView.style.display = 'block';
+            detailView.classList.add('fade-in');
+            
+            // تعيين الصورة والعنوان في الهيدر الداخلي
+            document.getElementById('cat-detail-title').innerText = cat.title;
+            document.getElementById('cat-header-img').src = cat.img;
+
+            listContainer.innerHTML = cat.items.map(item => `
+                <div class="menu-item-new" onclick="addToCartWithEffect(this, '${item.name}', ${item.price})">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-gray-800 text-sm md:text-base">${item.name}</h4>
+                    </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <span class="menu-price-new">${item.price} <small>ر.ي</small></span>
+                        ${getControlsHTML(item.name, item.price, true)}
+                    </div>
+                </div>
+            `).join('');
+            
+            Object.keys(cart).forEach(name => updateCardUI(name));
+        }
+
         function getControlsHTML(name, price, isSmall = false) {
             const btnClass = isSmall ? "scale-75" : "";
             const displayClass = isSmall ? "text-sm" : "";
-            const safeName = name.replace(/\s+/g, '-');
+            const safeName = name.replace(/\s+/g, '-').replace(/[()]/g, '').replace(/\+/g, '');
             return `
             <div class="flex items-center gap-3" id="controls-${safeName}">
                 <button class="btn-control btn-remove hidden ${btnClass}" onclick="event.stopPropagation(); updateQty('${name}', ${price}, -1)">-</button>
@@ -345,7 +574,7 @@
             </div>`;
         }
 
-        // --- Core Logic ---
+        // --- Logic (Cart & Sync) ---
         let cart = {}; 
         let totalAmount = 0;
         const cartBar = document.getElementById('cartBar');
@@ -353,99 +582,64 @@
         const totalEl = document.getElementById('total');
 
         function addToCartWithEffect(element, name, price) {
-            let ripple = document.createElement("span");
-            ripple.classList.add("ripple");
-            let rect = element.getBoundingClientRect();
-            ripple.style.left = rect.width / 2 + "px";
-            ripple.style.top = rect.height / 2 + "px";
-            element.appendChild(ripple);
-            setTimeout(() => { ripple.remove(); }, 600);
+            Haptic.light(); // اهتزاز خفيف "مقرمش"
             updateQty(name, price, 1);
         }
 
         function updateQty(name, price, change) {
+            if(change > 0) Haptic.light(); 
+
             if (!cart[name]) cart[name] = 0;
             cart[name] += change;
             if (cart[name] < 0) cart[name] = 0;
             
-            recalculateTotal();
+            totalAmount += (price * change);
+            if(totalAmount < 0) totalAmount = 0;
             updateCardUI(name);
             updateGlobalUI();
-            if(navigator.vibrate) navigator.vibrate(change > 0 ? 50 : 30);
-        }
-
-        function recalculateTotal() {
-            totalAmount = 0;
-            // البحث عن السعر من المصدر الأصلي دائماً (SSOT)
-            const allItems = [
-                ...menuData.grills.items, 
-                ...menuData.folk.items, 
-                ...menuData.rice.items, 
-                ...menuData.edam.items, 
-                ...menuData.drinks.items
-            ];
-            
-            for (let itemName in cart) {
-                if (cart[itemName] > 0) {
-                    const itemData = allItems.find(i => i.name === itemName);
-                    if (itemData) {
-                        totalAmount += (itemData.price * cart[itemName]);
-                    }
-                }
-            }
         }
 
         function updateCardUI(name) {
-            const safeName = name.replace(/\s+/g, '-');
-            const container = document.getElementById(`controls-${safeName}`);
-            if(!container) return;
+            const safeName = name.replace(/\s+/g, '-').replace(/[()]/g, '').replace(/\+/g, '');
+            const containers = document.querySelectorAll(`[id='controls-${safeName}']`);
             
-            const removeBtn = container.querySelector('.btn-remove');
-            const qtyDisplay = container.querySelector('.qty-display');
-            const qty = cart[name];
-
-            if (qty > 0) {
-                removeBtn.classList.remove('hidden');
-                qtyDisplay.classList.remove('hidden');
-                qtyDisplay.innerText = qty;
-            } else {
-                removeBtn.classList.add('hidden');
-                qtyDisplay.classList.add('hidden');
-            }
+            containers.forEach(container => {
+                const removeBtn = container.querySelector('.btn-remove');
+                const qtyDisplay = container.querySelector('.qty-display');
+                const qty = cart[name];
+                if (qty > 0) {
+                    removeBtn.classList.remove('hidden');
+                    qtyDisplay.classList.remove('hidden');
+                    qtyDisplay.innerText = qty;
+                } else {
+                    removeBtn.classList.add('hidden');
+                    qtyDisplay.classList.add('hidden');
+                }
+            });
         }
 
         function updateGlobalUI() {
             let totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
-            totalEl.style.transform = 'scale(1.2)';
-            setTimeout(() => totalEl.style.transform = 'scale(1)', 150);
-            totalEl.innerText = totalAmount.toLocaleString('en-US'); // توحيد الأرقام
+            totalEl.innerText = totalAmount.toLocaleString('en-US'); 
             cartCount.innerText = totalItems;
             
-            if(totalItems > 0) {
-                cartCount.style.transform = 'scale(1)';
-                cartBar.classList.remove('translate-y-full');
-            } else {
-                cartCount.style.transform = 'scale(0)';
-                cartBar.classList.add('translate-y-full');
-            }
+            if(totalItems > 0) cartBar.classList.remove('translate-y-full');
+            else cartBar.classList.add('translate-y-full');
         }
 
         function clearCart() {
             if(confirm('هل تريد إفراغ السلة بالكامل؟')) {
+                Haptic.medium();
                 cart = {};
-                // تصفير العدادات في الواجهة
-                document.querySelectorAll('.qty-display').forEach(el => {
-                    el.innerText = '0';
-                    el.classList.add('hidden');
-                });
+                totalAmount = 0;
+                document.querySelectorAll('.qty-display').forEach(el => el.classList.add('hidden'));
                 document.querySelectorAll('.btn-remove').forEach(el => el.classList.add('hidden'));
-                
-                recalculateTotal();
                 updateGlobalUI();
             }
         }
 
         function sendOrder() {
+            Haptic.heavy();
             let itemsList = "";
             let hasItems = false;
             for (let item in cart) {
@@ -455,7 +649,6 @@
                 }
             }
             if(!hasItems) return;
-
             let msg = "مرحبا مطعم أهلاً وسهلاً، أريد طلب:\n";
             msg += "-------------------\n";
             msg += itemsList;
@@ -466,8 +659,6 @@
             window.open(`https://wa.me/967779100056?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // تشغيل البناء الأوتوماتيكي
-        renderAllSections();
         document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
     </script>
 </body>
