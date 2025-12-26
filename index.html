@@ -34,6 +34,15 @@
                         'soft': '0 5px 20px -5px rgba(0, 0, 0, 0.1)',
                         'floating': '0 10px 30px -5px rgba(192, 38, 38, 0.25)',
                         'glow': '0 0 15px rgba(245, 158, 11, 0.3)'
+                    },
+                    animation: {
+                        'bounce-slight': 'bounce-slight 0.3s infinite alternate'
+                    },
+                    keyframes: {
+                        'bounce-slight': {
+                            '0%': { transform: 'translateY(0)' },
+                            '100%': { transform: 'translateY(-5px)' }
+                        }
                     }
                 }
             }
@@ -59,10 +68,10 @@
         .tab-btn.active { background: white; color: #c02626; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: scale(1.02); }
         .tab-btn.inactive { color: #6b7280; }
         
-        /* 🔥 NEW CATEGORY CARD STYLES (Professional Image Cards) */
+        /* New Category Card Styles */
         .cat-card-new { 
             position: relative; 
-            height: 140px; /* ارتفاع ثابت للكرت */
+            height: 140px; 
             border-radius: 20px; 
             overflow: hidden; 
             box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15); 
@@ -105,6 +114,17 @@
         .hidden-view { display: none; }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Payment Modal Styles */
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .modal-content { background: white; width: 90%; max-width: 400px; border-radius: 24px; padding: 20px; transform: scale(0.9); transition: transform 0.3s; position: relative; overflow: hidden; }
+        .payment-option { border: 2px solid transparent; transition: all 0.2s; height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        .payment-option:active { transform: scale(0.95); }
+        .payment-logo { width: 100%; height: 50px; object-fit: contain; margin-bottom: 5px; }
+        
+        .modal-open { display: flex !important; opacity: 1 !important; }
+        .modal-open .modal-content { transform: scale(1) !important; }
+
     </style>
 </head>
 <body class="text-gray-800 antialiased selection:bg-brand-red selection:text-white">
@@ -173,12 +193,10 @@
 
         <!-- VIEW 2: New Full Menu (With Images) -->
         <div id="view-categories" class="hidden-view fade-in">
-            <!-- شبكة الأقسام بالصور -->
-            <div id="categories-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <!-- سيتم تعبئتها تلقائياً -->
-            </div>
+            <!-- Categories Grid -->
+            <div id="categories-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2"></div>
 
-            <!-- عرض تفاصيل القسم -->
+            <!-- Detail View -->
             <div id="category-detail" class="hidden-view">
                 <button onclick="showCategoriesGrid()" class="mb-4 bg-white text-brand-red px-5 py-2 rounded-full shadow-sm font-bold flex items-center gap-2 hover:bg-gray-50">
                     <span>🔙 رجوع للأقسام</span>
@@ -189,8 +207,7 @@
                         <h3 id="cat-detail-title" class="font-ruqaa text-4xl text-white drop-shadow-lg"></h3>
                     </div>
                 </div>
-
-                <!-- قائمة الطعام الكاملة -->
+                <!-- Menu List -->
                 <div id="full-menu-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
             </div>
         </div>
@@ -227,14 +244,91 @@
             </div>
         </div>
         <button onclick="clearCart()" class="text-gray-300 hover:text-red-500 transition mx-4">🗑️</button>
-        <button onclick="sendOrder()" class="bg-gradient-to-r from-brand-red to-red-600 text-white font-black py-4 px-8 rounded-2xl shadow-lg flex items-center gap-2 transform active:scale-95 transition">
+        <button onclick="initiatePayment()" class="bg-gradient-to-r from-brand-red to-red-600 text-white font-black py-4 px-8 rounded-2xl shadow-lg flex items-center gap-2 transform active:scale-95 transition">
             <span>إتمام الطلب ✅</span>
         </button>
     </div>
 
+    <!-- 🔥 PAYMENT MODAL SYSTEM (6 OPTIONS) 🔥 -->
+    <div id="paymentModal" class="modal-backdrop" onclick="closePaymentModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <!-- Step 1: Select Method -->
+            <div id="payment-step-1">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-black text-xl text-gray-800">كيف تحب تدفع؟ 💸</h3>
+                    <button onclick="closePaymentModal()" class="text-gray-400 text-2xl">&times;</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    
+                    <!-- 1. Cash -->
+                    <div onclick="processPayment('cash')" class="payment-option bg-green-50 border-green-200 rounded-xl cursor-pointer hover:bg-green-100 items-center">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="w-10 h-10 mb-1">
+                        <span class="font-bold text-green-800 text-sm">عند الاستلام</span>
+                    </div>
+
+                    <!-- 2. M-Floos (No Kuraimi) -->
+                    <div onclick="processPayment('mfloos')" class="payment-option bg-orange-50 border-orange-200 rounded-xl cursor-pointer hover:bg-orange-100 items-center">
+                        <img src="https://i.postimg.cc/Gp87Qmmy/ʿmlaʾ-1.png" class="payment-logo">
+                        <span class="font-bold text-orange-800 text-sm">إم فلوس</span>
+                    </div>
+
+                    <!-- 3. Jeeb -->
+                    <div onclick="processPayment('jeeb')" class="payment-option bg-red-50 border-red-200 rounded-xl cursor-pointer hover:bg-red-100 items-center">
+                        <img src="https://i.postimg.cc/C1529s7c/1200x630wa.png" class="payment-logo">
+                        <span class="font-bold text-red-800 text-sm">محفظة جيب</span>
+                    </div>
+
+                    <!-- 4. Jawali -->
+                    <div onclick="processPayment('jawali')" class="payment-option bg-blue-50 border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 items-center">
+                        <img src="https://i.postimg.cc/JnHfGQXW/jawali.png" class="payment-logo">
+                        <span class="font-bold text-blue-800 text-sm">جوالي</span>
+                    </div>
+
+                    <!-- 5. One Cash -->
+                    <div onclick="processPayment('onecash')" class="payment-option bg-yellow-50 border-yellow-200 rounded-xl cursor-pointer hover:bg-yellow-100 items-center">
+                        <img src="https://i.postimg.cc/QNwM46mt/wan-kash.jpg" class="payment-logo rounded-md">
+                        <span class="font-bold text-yellow-800 text-sm">ون كاش</span>
+                    </div>
+
+                    <!-- 6. Floosak -->
+                    <div onclick="processPayment('floosak')" class="payment-option bg-cyan-50 border-cyan-200 rounded-xl cursor-pointer hover:bg-cyan-100 items-center">
+                        <img src="https://i.postimg.cc/hGvjZNky/Screenshot-20251226-163859-Google.jpg" class="payment-logo rounded-md">
+                        <span class="font-bold text-cyan-800 text-sm">فلوسك</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Step 2: Transfer Details (Hidden) -->
+            <div id="payment-step-2" class="hidden">
+                <button onclick="backToStep1()" class="text-sm text-gray-500 mb-4 flex items-center gap-1 font-bold">🔙 تغيير الوسيلة</button>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4 text-3xl animate-bounce-slight" id="step2-icon">🏦</div>
+                    <h3 class="font-black text-lg text-gray-800 mb-2">بيانات التحويل</h3>
+                    <p class="text-sm text-gray-500 mb-4">يرجى تحويل المبلغ المستحق إلى الرقم التالي:</p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4 flex justify-between items-center" onclick="copyNumber()">
+                        <span class="font-black text-xl tracking-widest text-brand-dark" id="wallet-number">779100056</span>
+                        <span class="text-xs bg-white border border-gray-200 px-2 py-1 rounded text-gray-500" id="copy-text">نسخ 📋</span>
+                    </div>
+
+                    <div class="bg-yellow-50 p-3 rounded-lg mb-6 text-right">
+                        <p class="text-xs text-yellow-800 font-bold">⚠️ ملاحظة مهمة:</p>
+                        <p class="text-[11px] text-yellow-700 mt-1">بعد التحويل، يرجى تصوير الشاشة (السند) وإرسالها لنا في الواتساب لإكمال الطلب.</p>
+                    </div>
+
+                    <button onclick="finalizeOrder()" class="w-full bg-[#25D366] text-white font-black py-3 rounded-xl shadow-lg hover:brightness-105 transition flex justify-center items-center gap-2">
+                        <span>تم التحويل.. إرسال السند</span>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==========================================
-        // 1. DATA: Original Menu (No Changes)
+        // 1. DATA: Original Menu
         // ==========================================
         const originalMenu = {
             grills: {
@@ -286,12 +380,11 @@
         };
 
         // ==========================================
-        // 2. DATA: Full Menu UPDATED (With User Images)
+        // 2. DATA: Full Menu UPDATED
         // ==========================================
         const fullMenu = {
             burger: {
                 title: "قسم البرجر", 
-                // الصورة من المستخدم
                 img: "https://i.ibb.co/MxHKwrX1/Best-Burgers-in-Ras-Al-Khaimah-Cover-28-092025ar.jpg",
                 items: [
                     { name: 'برجر أهلاً وسهلاً ماكس', price: 1800 },
@@ -309,7 +402,6 @@
             },
             shawarma: {
                 title: "قسم الشاورما", 
-                // الصورة من المستخدم
                 img: "https://i.postimg.cc/ZqCwdVWN/maxresdefault-(4).jpg",
                 items: [
                     { name: 'شاورما أهلاً وسهلاً', price: 1500 },
@@ -323,7 +415,6 @@
             },
             chicken: {
                 title: "قسم الدجاج", 
-                // الصورة من المستخدم (GIF)
                 img: "https://i.postimg.cc/htHd2rCn/roz-o-dajaj.gif",
                 items: [
                     { name: 'حبة دجاج بروست', price: 5200 },
@@ -340,7 +431,6 @@
             },
             meat: {
                 title: "اللحوم والمشاوي", 
-                // الصورة من المستخدم
                 img: "https://i.postimg.cc/15XVPT26/hq720-(2).jpg",
                 items: [
                     { name: 'ربع ذبيحة لحم مندي مع الأرز', price: 11800 },
@@ -356,7 +446,6 @@
             },
             sides: {
                 title: "الأرز ", 
-                // الصورة من المستخدم
                 img: "https://i.postimg.cc/HxTjNPXf/mndy-djaj.webp",
                 items: [
                     { name: 'بيتزا أهلاً كبير', price: 3000 },
@@ -375,20 +464,17 @@
         };
 
         // ==========================================
-        // 🛠️ HAPTIC FEEDBACK ENGINE (System Logic)
+        // 🛠️ SYSTEM LOGIC
         // ==========================================
         const Haptic = {
-            light: () => {
-                if(navigator.vibrate) navigator.vibrate(10); 
-            },
-            medium: () => {
-                if(navigator.vibrate) navigator.vibrate(25);
-            },
-            heavy: () => {
-                // اهتزاز مزدوج قوي عند فتح قسم
-                if(navigator.vibrate) navigator.vibrate([40, 50, 20]);
-            }
+            light: () => { if(navigator.vibrate) navigator.vibrate(10); },
+            medium: () => { if(navigator.vibrate) navigator.vibrate(25); },
+            heavy: () => { if(navigator.vibrate) navigator.vibrate([40, 50, 20]); }
         };
+
+        let cart = {}; 
+        let totalAmount = 0;
+        let selectedPaymentMethod = ''; 
 
         window.onload = function() {
             renderOriginalPage();
@@ -396,7 +482,7 @@
         };
 
         function switchView(view) {
-            Haptic.medium(); // اهتزاز عند التبديل
+            Haptic.medium();
             const btnMain = document.getElementById('btn-main');
             const btnCats = document.getElementById('btn-categories');
             const viewMain = document.getElementById('view-main');
@@ -406,7 +492,6 @@
                 viewMain.style.display = 'block';
                 viewCats.style.display = 'none';
                 viewMain.classList.add('fade-in');
-                
                 btnMain.classList.add('active');
                 btnMain.classList.remove('inactive');
                 btnCats.classList.remove('active');
@@ -423,6 +508,7 @@
             }
         }
 
+        // --- RENDER FUNCTIONS ---
         function renderOriginalPage() {
             renderSection('grills', 'horizontal');
             renderSection('folk', 'vertical');
@@ -513,7 +599,6 @@
             }
         }
 
-        // --- NEW CATEGORIES RENDER (With Images) ---
         function renderCategoriesGrid() {
             const grid = document.getElementById('categories-grid');
             grid.innerHTML = Object.keys(fullMenu).map(key => {
@@ -534,7 +619,7 @@
         }
 
         function openCategory(key) {
-            Haptic.heavy(); // اهتزاز قوي عند الدخول للقسم
+            Haptic.heavy();
             const cat = fullMenu[key];
             const detailView = document.getElementById('category-detail');
             const listContainer = document.getElementById('full-menu-list');
@@ -543,7 +628,6 @@
             detailView.style.display = 'block';
             detailView.classList.add('fade-in');
             
-            // تعيين الصورة والعنوان في الهيدر الداخلي
             document.getElementById('cat-detail-title').innerText = cat.title;
             document.getElementById('cat-header-img').src = cat.img;
 
@@ -574,21 +658,18 @@
             </div>`;
         }
 
-        // --- Logic (Cart & Sync) ---
-        let cart = {}; 
-        let totalAmount = 0;
+        // --- CART LOGIC ---
         const cartBar = document.getElementById('cartBar');
         const cartCount = document.getElementById('cartCount');
         const totalEl = document.getElementById('total');
 
         function addToCartWithEffect(element, name, price) {
-            Haptic.light(); // اهتزاز خفيف "مقرمش"
+            Haptic.light();
             updateQty(name, price, 1);
         }
 
         function updateQty(name, price, change) {
             if(change > 0) Haptic.light(); 
-
             if (!cart[name]) cart[name] = 0;
             cart[name] += change;
             if (cart[name] < 0) cart[name] = 0;
@@ -602,7 +683,6 @@
         function updateCardUI(name) {
             const safeName = name.replace(/\s+/g, '-').replace(/[()]/g, '').replace(/\+/g, '');
             const containers = document.querySelectorAll(`[id='controls-${safeName}']`);
-            
             containers.forEach(container => {
                 const removeBtn = container.querySelector('.btn-remove');
                 const qtyDisplay = container.querySelector('.qty-display');
@@ -622,7 +702,6 @@
             let totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
             totalEl.innerText = totalAmount.toLocaleString('en-US'); 
             cartCount.innerText = totalItems;
-            
             if(totalItems > 0) cartBar.classList.remove('translate-y-full');
             else cartBar.classList.add('translate-y-full');
         }
@@ -638,24 +717,87 @@
             }
         }
 
-        function sendOrder() {
-            Haptic.heavy();
+        // ==========================================
+        // 🚀 PAYMENT SYSTEM FUNCTIONS
+        // ==========================================
+        
+        function initiatePayment() {
+            if (totalAmount === 0) {
+                alert("السلة فارغة!");
+                return;
+            }
+            Haptic.medium();
+            document.getElementById('paymentModal').classList.add('modal-open');
+        }
+
+        function closePaymentModal(e) {
+            if (e && e.target !== e.currentTarget && e.target.id !== 'close-btn') return;
+            document.getElementById('paymentModal').classList.remove('modal-open');
+            setTimeout(() => {
+                document.getElementById('payment-step-1').classList.remove('hidden');
+                document.getElementById('payment-step-2').classList.add('hidden');
+            }, 300);
+        }
+
+        function processPayment(method) {
+            Haptic.light();
+            if (method === 'cash') {
+                selectedPaymentMethod = 'كاش (عند الاستلام)';
+                finalizeOrder();
+            } else {
+                if (method === 'mfloos') selectedPaymentMethod = 'إم فلوس (الكريمي)';
+                else if (method === 'jeeb') selectedPaymentMethod = 'محفظة جيب';
+                else if (method === 'jawali') selectedPaymentMethod = 'محفظة جوالي';
+                else if (method === 'onecash') selectedPaymentMethod = 'ون كاش (One Cash)';
+                else if (method === 'floosak') selectedPaymentMethod = 'فلوسك (Floosak)';
+
+                document.getElementById('payment-step-1').classList.add('hidden');
+                document.getElementById('payment-step-2').classList.remove('hidden');
+            }
+        }
+
+        function backToStep1() {
+            document.getElementById('payment-step-1').classList.remove('hidden');
+            document.getElementById('payment-step-2').classList.add('hidden');
+        }
+
+        function copyNumber() {
+            const num = "779100056";
+            navigator.clipboard.writeText(num).then(() => {
+                Haptic.light();
+                const copyText = document.getElementById('copy-text');
+                const originalText = copyText.innerText;
+                copyText.innerText = "تم النسخ ✅";
+                copyText.classList.add('bg-green-100', 'text-green-700');
+                setTimeout(() => {
+                    copyText.innerText = originalText;
+                    copyText.classList.remove('bg-green-100', 'text-green-700');
+                }, 2000);
+            });
+        }
+
+        function finalizeOrder() {
             let itemsList = "";
-            let hasItems = false;
             for (let item in cart) {
                 if (cart[item] > 0) {
                     itemsList += `▪️ ${item} (عدد ${cart[item]})\n`;
-                    hasItems = true;
                 }
             }
-            if(!hasItems) return;
+
             let msg = "مرحبا مطعم أهلاً وسهلاً، أريد طلب:\n";
             msg += "-------------------\n";
             msg += itemsList;
             msg += "-------------------\n";
             msg += `💰 *الإجمالي: ${totalAmount.toLocaleString('en-US')} ريال*\n`;
-            msg += `(من فضلك ضع موقعك هنا)`;
+            msg += `💳 *طريقة الدفع:* ${selectedPaymentMethod}\n`;
             
+            if (selectedPaymentMethod !== 'كاش (عند الاستلام)') {
+                msg += `📎 (مرفق صورة سند التحويل)\n`;
+            }
+
+            msg += `📍 *الموقع:* (يرجى إرسال موقعك هنا)`;
+            
+            closePaymentModal();
             window.open(`https://wa.me/967779100056?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
