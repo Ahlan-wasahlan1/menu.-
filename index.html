@@ -108,23 +108,20 @@
             position: relative;
             z-index: 10;
         }
-
         .menu-item-new { background: white; padding: 12px; border-radius: 16px; border-bottom: 2px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
         .menu-price-new { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; }
         .hidden-view { display: none; }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         /* Payment Modal Styles */
         .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
-        .modal-content { background: white; width: 90%; max-width: 400px; border-radius: 24px; padding: 20px; transform: scale(0.9); transition: transform 0.3s; position: relative; overflow: hidden; }
+        .modal-content { background: white; width: 90%; max-width: 400px; border-radius: 24px; padding: 20px; transform: scale(0.9); transition: transform 0.3s; position: relative; overflow: hidden; max-height: 90vh; overflow-y: auto; }
         .payment-option { border: 2px solid transparent; transition: all 0.2s; height: 100px; display: flex; flex-direction: column; justify-content: center; }
         .payment-option:active { transform: scale(0.95); }
         .payment-logo { width: 100%; height: 50px; object-fit: contain; margin-bottom: 5px; }
         
         .modal-open { display: flex !important; opacity: 1 !important; }
         .modal-open .modal-content { transform: scale(1) !important; }
-
     </style>
 </head>
 <body class="text-gray-800 antialiased selection:bg-brand-red selection:text-white">
@@ -181,7 +178,6 @@
 
     <!-- MAIN CONTAINER -->
     <div class="container mx-auto px-4 py-6">
-
         <!-- VIEW 1: Original Main Page -->
         <div id="view-main" class="fade-in space-y-12">
             <section id="section-grills"></section>
@@ -211,7 +207,6 @@
                 <div id="full-menu-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
             </div>
         </div>
-
     </div>
 
     <!-- Footer -->
@@ -252,50 +247,53 @@
     <!-- 🔥 PAYMENT MODAL SYSTEM (6 OPTIONS) 🔥 -->
     <div id="paymentModal" class="modal-backdrop" onclick="closePaymentModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
+            
             <!-- Step 1: Select Method -->
             <div id="payment-step-1">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="font-black text-xl text-gray-800">كيف تحب تدفع؟ 💸</h3>
                     <button onclick="closePaymentModal()" class="text-gray-400 text-2xl">&times;</button>
                 </div>
+                
                 <div class="grid grid-cols-2 gap-3">
-                    
                     <!-- 1. Cash -->
                     <div onclick="processPayment('cash')" class="payment-option bg-green-50 border-green-200 rounded-xl cursor-pointer hover:bg-green-100 items-center">
                         <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="w-10 h-10 mb-1">
                         <span class="font-bold text-green-800 text-sm">عند الاستلام</span>
                     </div>
-
                     <!-- 2. M-Floos (No Kuraimi) -->
                     <div onclick="processPayment('mfloos')" class="payment-option bg-orange-50 border-orange-200 rounded-xl cursor-pointer hover:bg-orange-100 items-center">
                         <img src="https://i.postimg.cc/Gp87Qmmy/ʿmlaʾ-1.png" class="payment-logo">
                         <span class="font-bold text-orange-800 text-sm">إم فلوس</span>
                     </div>
-
                     <!-- 3. Jeeb -->
                     <div onclick="processPayment('jeeb')" class="payment-option bg-red-50 border-red-200 rounded-xl cursor-pointer hover:bg-red-100 items-center">
                         <img src="https://i.postimg.cc/C1529s7c/1200x630wa.png" class="payment-logo">
                         <span class="font-bold text-red-800 text-sm">محفظة جيب</span>
                     </div>
-
                     <!-- 4. Jawali -->
                     <div onclick="processPayment('jawali')" class="payment-option bg-blue-50 border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 items-center">
                         <img src="https://i.postimg.cc/JnHfGQXW/jawali.png" class="payment-logo">
                         <span class="font-bold text-blue-800 text-sm">جوالي</span>
                     </div>
-
                     <!-- 5. One Cash -->
                     <div onclick="processPayment('onecash')" class="payment-option bg-yellow-50 border-yellow-200 rounded-xl cursor-pointer hover:bg-yellow-100 items-center">
                         <img src="https://i.postimg.cc/QNwM46mt/wan-kash.jpg" class="payment-logo rounded-md">
                         <span class="font-bold text-yellow-800 text-sm">ون كاش</span>
                     </div>
-
                     <!-- 6. Floosak -->
                     <div onclick="processPayment('floosak')" class="payment-option bg-cyan-50 border-cyan-200 rounded-xl cursor-pointer hover:bg-cyan-100 items-center">
                         <img src="https://i.postimg.cc/hGvjZNky/Screenshot-20251226-163859-Google.jpg" class="payment-logo rounded-md">
                         <span class="font-bold text-cyan-800 text-sm">فلوسك</span>
                     </div>
+                </div>
 
+                <!-- 🔥 NEW: Location Button Added Here 🔥 -->
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <button id="btn-location" onclick="requestUserLocation()" 
+                            class="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl border border-gray-200 flex justify-center items-center gap-2 hover:bg-gray-200 transition">
+                        <span>📍 اضغط هنا لتحديد موقعك تلقائياً لاستلام الطلب</span>
+                    </button>
                 </div>
             </div>
 
@@ -474,7 +472,10 @@
 
         let cart = {}; 
         let totalAmount = 0;
-        let selectedPaymentMethod = ''; 
+        let selectedPaymentMethod = '';
+        
+        // 🔥 NEW: Location Variable
+        let userLocationLink = "(لم يتم تحديد الموقع تلقائياً - يرجى إرسال اللوكيشن)";
 
         window.onload = function() {
             renderOriginalPage();
@@ -630,7 +631,6 @@
             
             document.getElementById('cat-detail-title').innerText = cat.title;
             document.getElementById('cat-header-img').src = cat.img;
-
             listContainer.innerHTML = cat.items.map(item => `
                 <div class="menu-item-new" onclick="addToCartWithEffect(this, '${item.name}', ${item.price})">
                     <div class="flex-1">
@@ -750,7 +750,6 @@
                 else if (method === 'jawali') selectedPaymentMethod = 'محفظة جوالي';
                 else if (method === 'onecash') selectedPaymentMethod = 'ون كاش (One Cash)';
                 else if (method === 'floosak') selectedPaymentMethod = 'فلوسك (Floosak)';
-
                 document.getElementById('payment-step-1').classList.add('hidden');
                 document.getElementById('payment-step-2').classList.remove('hidden');
             }
@@ -776,6 +775,38 @@
             });
         }
 
+        // 🔥 NEW: Request User Location Function
+        function requestUserLocation() {
+            if(navigator.vibrate) navigator.vibrate(10);
+            if (!navigator.geolocation) {
+                alert("عذراً، متصفحك لا يدعم تحديد الموقع الجغرافي.");
+                return;
+            }
+            
+            const btn = document.getElementById('btn-location');
+            if(btn) btn.innerText = "جاري تحديد الموقع... ⏳";
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    userLocationLink = `https://maps.google.com/?q=${lat},${lng}`;
+                    
+                    if(btn) {
+                        btn.innerText = "✅ تم تحديد موقعك بنجاح!";
+                        btn.classList.remove('bg-gray-100', 'text-gray-600');
+                        btn.classList.add('bg-green-100', 'text-green-700', 'border-green-200');
+                    }
+                    if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
+                },
+                (error) => {
+                    alert("⚠️ تعذر تحديد الموقع. يرجى التأكد من تفعيل الـ GPS والسماح للمتصفح.");
+                    if(btn) btn.innerText = "📍 اضغط لتحديد موقعك تلقائياً";
+                },
+                { enableHighAccuracy: true }
+            );
+        }
+
         function finalizeOrder() {
             let itemsList = "";
             for (let item in cart) {
@@ -783,7 +814,6 @@
                     itemsList += `▪️ ${item} (عدد ${cart[item]})\n`;
                 }
             }
-
             let msg = "مرحبا مطعم أهلاً وسهلاً، أريد طلب:\n";
             msg += "-------------------\n";
             msg += itemsList;
@@ -794,8 +824,8 @@
             if (selectedPaymentMethod !== 'كاش (عند الاستلام)') {
                 msg += `📎 (مرفق صورة سند التحويل)\n`;
             }
-
-            msg += `📍 *الموقع:* (يرجى إرسال موقعك هنا)`;
+            // 🔥 Updated: Use the detected link
+            msg += `📍 *الموقع:* ${userLocationLink}`;
             
             closePaymentModal();
             window.open(`https://wa.me/967779100056?text=${encodeURIComponent(msg)}`, '_blank');
