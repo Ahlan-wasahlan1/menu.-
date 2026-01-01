@@ -39,7 +39,7 @@
         }
     </script>
     <style>
-        body { font-family: 'Cairo', sans-serif; padding-bottom: 130px; background-color: #fff7ed; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; padding-bottom: 140px; background-color: #fff7ed; -webkit-tap-highlight-color: transparent; }
         
         /* General Styles */
         .food-img { width: 110px; height: 110px; object-fit: cover; border-radius: 16px; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -58,7 +58,7 @@
         .tab-btn.active { background: white; color: #c02626; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: scale(1.02); }
         .tab-btn.inactive { color: #6b7280; }
 
-        /* Banner Style for Categories */
+        /* Banner Style */
         .cat-card-new { position: relative; height: 140px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 20px -5px rgba(0,0,0,0.15); transition: transform 0.2s; cursor: pointer; margin-bottom: 12px; }
         .cat-card-new:active { transform: scale(0.97); }
         .cat-card-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
@@ -199,6 +199,18 @@
         </div>
     </div>
 
+    <!-- FOOTER (COPYRIGHTS) - RESTORED -->
+    <div class="text-center py-6 mt-6 border-t border-gray-200">
+        <p class="text-xs text-gray-500 font-bold mb-3">جميع الحقوق محفوظة © لمطعم أهلاً وسهلاً 2026</p>
+        <div class="flex justify-center items-center">
+            <a href="https://wa.me/967775904946?text=السلام%20عليكم،%20شفت%20شغلكم%20في%20تطبيق%20مطعم%20أهلاً%20وسهلاً%20وأعجبني..%20أريد%20تصميم%20موقع%20وتطبيق%20لمشروعي%20الخاص...." 
+               target="_blank" 
+               class="bg-stone-200 text-gray-700 px-6 py-2 rounded-xl shadow-sm text-xs font-black hover:bg-stone-300 transition">
+                Powered By YEMEN CLICK 🚀
+            </a>
+        </div>
+    </div>
+
     <!-- 🌟 MINI CHECKOUT BAR (FLOATING) 🌟 -->
     <div id="miniCheckoutBar">
         <div class="flex flex-col pl-4">
@@ -236,7 +248,7 @@
         </div>
         <a href="https://wa.me/967779100056" target="_blank" class="nav-item group">
             <div class="nav-icon text-[#25D366] group-hover:scale-110 transition">
-                <!-- Official WhatsApp SVG (Professional Look) -->
+                <!-- Official WhatsApp SVG -->
                 <svg viewBox="0 0 32 32" class="w-6 h-6 fill-current"><path d="M16,2A13,13,0,0,0,8,25.23L2.92,27.3a1,1,0,0,0-1.29,1.29L3.71,33.7A13,13,0,0,0,16,38,13,13,0,0,0,16,2Zm0,24a11,11,0,0,1-5.6-1.53l-.4-.24L6.36,25.66l1.58-3.92-.25-.39A11,11,0,1,1,16,26Z" transform="translate(-1.63 -2)"/><path d="M21.73,20.66l-2-1a.84.84,0,0,0-1.16.27l-.88,1.08a.54.54,0,0,1-.66.13c-1.56-.69-3.21-2.22-3.79-3.72a.55.55,0,0,1,.15-.68l1.05-.84a.86.86,0,0,0,.29-1.17l-.93-2.16a.86.86,0,0,0-1.44-.09l-1,1.33c-.5.67-.44,2,.78,4.17,1.86,3.29,4.92,4.42,6.1,4.22a2.38,2.38,0,0,0,1.91-1.37l.63-1.55A.85.85,0,0,0,21.73,20.66Z" transform="translate(-1.63 -2)"/></svg>
             </div>
             <span class="text-[#25D366]">واتساب</span>
@@ -429,8 +441,8 @@
                     { name: 'عصير مانجو', price: 300, img: 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=200&q=80', color: 'yellow' },
                     { name: 'عصير جوافة', price: 250, img: 'https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?w=200&q=80', color: 'green' },
                     { name: 'بيبسي', price: 300, img: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=200&q=80', color: 'blue' },
-                    { name: 'عصير برتقال', price: 200, img: 'https://i.postimg.cc/dVn1PprD/6385255.jpg', color: 'orange' }, // RESTORED
-                    { name: '7 UP', price: 300, img: 'https://i.postimg.cc/W1VnfFwc/Pepsi-Co-7UP-Global-Mixology-Campaign.jpg', color: 'teal' } // RESTORED
+                    { name: 'عصير برتقال', price: 200, img: 'https://i.postimg.cc/dVn1PprD/6385255.jpg', color: 'orange' }, 
+                    { name: '7 UP', price: 300, img: 'https://i.postimg.cc/W1VnfFwc/Pepsi-Co-7UP-Global-Mixology-Campaign.jpg', color: 'teal' } 
                 ]
             }
         };
@@ -520,8 +532,6 @@
         // 🛠️ APP LOGIC (FIXED CORE)
         // ==========================================
         
-        // 🔥 MASTER PRICE INDEX (THE FIX) 🔥
-        // This ensures the price is ALWAYS correct and unified.
         const DB_PRICES = {}; 
 
         const Haptic = {
@@ -531,19 +541,16 @@
 
         let cart = {}; 
         let totalAmount = 0;
-        let selectedPaymentMsg = ''; // For WhatsApp Formatting
+        let selectedPaymentMsg = ''; 
         let userLocationLink = "(لم يتم التحديد)";
 
         window.onload = function() {
-            // 1. Build the Master Price Index
             Object.values(originalMenu).forEach(sec => {
                 sec.items.forEach(item => { DB_PRICES[item.name] = item.price; });
             });
             Object.values(fullMenu).forEach(cat => {
                 cat.items.forEach(item => { DB_PRICES[item.name] = item.price; });
             });
-
-            // 2. Render UI
             renderOriginalPage();
             renderCategoriesGrid();
         };
@@ -574,7 +581,7 @@
         function renderOriginalPage() {
             renderSection('grills', 'horizontal');
             renderSection('folk', 'vertical');
-            renderSection('rice', 'large'); // Banner Style Restored
+            renderSection('rice', 'large');
             renderSection('edam', 'vertical');
             renderSection('drinks', 'mini');
         }
@@ -618,8 +625,7 @@
                         </div>
                     </div>
                 </div>`;
-            } else if (type === 'large') { // BANNER STYLE (Restored & Fixed)
-                // Flex-row-reverse logic: RTL body -> row-reverse puts first element (Image) on LEFT.
+            } else if (type === 'large') {
                 return `
                 <div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse items-center h-40" onclick="addToCart(this, '${item.name}', ${item.price})">
                     <div class="w-2/5 h-full">
@@ -635,7 +641,6 @@
                     </div>
                 </div>`;
             } else {
-                // Vertical & Mini
                 return `
                 <div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center" onclick="addToCart(this, '${item.name}', ${item.price})">
                     <img src="${item.img}" class="w-full h-28 object-cover rounded-2xl mb-3 shadow-sm">
@@ -659,7 +664,6 @@
             </div>`;
         }
 
-        // --- Categories Logic ---
         function renderCategoriesGrid() {
             const grid = document.getElementById('categories-grid');
             grid.innerHTML = Object.keys(fullMenu).map(key => {
@@ -706,7 +710,6 @@
             Object.keys(cart).forEach(name => updateCardUI(name));
         }
 
-        // --- CART SYSTEM ---
         function addToCart(el, name, price) {
             Haptic.light();
             updateQty(name, price, 1);
@@ -717,7 +720,6 @@
             cart[name] += change;
             if (cart[name] < 0) cart[name] = 0;
             
-            // USE GLOBAL DB_PRICES FOR ACCURACY
             const actualPrice = DB_PRICES[name] || price;
             totalAmount += (actualPrice * change);
             if(totalAmount < 0) totalAmount = 0;
@@ -773,7 +775,6 @@
             }
         }
 
-        // --- SEARCH SYSTEM ---
         function openSearchModal() {
             document.getElementById('search-modal').style.display = 'block';
             document.getElementById('real-search-input').focus();
@@ -803,7 +804,6 @@
             Object.keys(cart).forEach(name => updateCardUI(name));
         }
 
-        // --- PAYMENT & MODALS ---
         function openCartPreview() {
             if(totalAmount === 0) { alert("السلة فارغة"); return; }
             const modal = document.getElementById('paymentModal');
@@ -854,7 +854,6 @@
                 selectedPaymentMsg = '💵 كاش (الدفع عند الاستلام)';
                 finalizeOrder();
             } else {
-                // Set the fancy message for WhatsApp (Card Emoji + Text)
                 if (method === 'mfloos') selectedPaymentMsg = '💳 إم فلوس (M-Floos)';
                 else if (method === 'jeeb') selectedPaymentMsg = '💳 محفظة جيب (Jeeb Wallet)';
                 else if (method === 'jawali') selectedPaymentMsg = '💳 محفظة جوالي (Jawali)';
@@ -871,65 +870,4 @@
             if(!navigator.geolocation) { alert("المتصفح لا يدعم تحديد الموقع"); return; }
             
             btn.innerText = "جاري تحديد الموقع... ⏳";
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const {latitude, longitude} = pos.coords;
-                    userLocationLink = `https://maps.google.com/?q=${latitude},${longitude}`;
-                    btn.innerHTML = `<span>✅ تم تحديد الموقع بنجاح</span>`;
-                    btn.className = "w-full bg-green-50 text-green-700 font-bold py-3 rounded-xl border border-green-200 flex justify-center items-center gap-2 transition text-xs shadow-inner";
-                },
-                (err) => {
-                    alert("تعذر تحديد الموقع، تأكد من تفعيل الـ GPS");
-                    btn.innerText = "📍 اضغط لتحديد موقعك تلقائياً";
-                },
-                { enableHighAccuracy: true }
-            );
-        }
-
-        function copyNumber() {
-            navigator.clipboard.writeText("779100056").then(() => {
-                const el = document.getElementById('copy-text');
-                el.innerText = "تم النسخ";
-                el.classList.add('bg-green-100', 'text-green-600');
-                setTimeout(() => {
-                    el.innerText = "نسخ 📋";
-                    el.classList.remove('bg-green-100', 'text-green-600');
-                }, 2000);
-            });
-        }
-
-        function finalizeOrder() {
-            // Use encodeURIComponent to handle special characters properly
-            let msg = "مرحبا مطعم أهلاً وسهلاً، طلب جديد:%0A";
-            msg += "-------------------%0A";
-            
-            for (let item in cart) {
-                if (cart[item] > 0) {
-                    msg += `▪️ ${item} (عدد ${cart[item]})%0A`;
-                }
-            }
-            
-            msg += "-------------------%0A";
-            // USE GLOBAL totalAmount DIRECTLY - NO RECALCULATION
-            msg += `💰 *الإجمالي: ${totalAmount.toLocaleString('en-US')} ريال*%0A`;
-            msg += `💳 *طريقة الدفع:* ${selectedPaymentMsg}%0A`; 
-            msg += `📍 *الموقع:* ${userLocationLink}`;
-
-            document.getElementById('paymentModal').classList.remove('modal-open');
-            window.open(`https://wa.me/967779100056?text=${msg}`, '_blank');
-        }
-
-        function shareApp() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'مطعم أهلاً وسهلاً',
-                    text: 'أفضل مطعم في شارع الستين، اطلب الحين! 🍔',
-                    url: window.location.href,
-                });
-            } else {
-                alert("تم نسخ الرابط!");
-            }
-        }
-    </script>
-</body>
-</html>
+       
