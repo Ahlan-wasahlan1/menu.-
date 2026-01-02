@@ -969,6 +969,30 @@
   }
 
   testFirebase();
+        async function loadDrinksFromFirebase() {
+  const snapshot = await getDocs(collection(db, "items"));
+  const drinks = [];
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    if (data.sectionKey === "drinks") {
+      drinks.push({
+        name: data.name,
+        price: data.price,
+        img: data.image,
+        desc: data.desc || ""
+      });
+    }
+  });
+
+  if (drinks.length > 0 && window.originalMenu) {
+    window.originalMenu.drinks.items = drinks;
+    console.log("✅ Drinks loaded from Firebase:", drinks);
+  }
+}
+
+// تشغيل التحميل بعد ثانيتين (عشان الموقع يجهز)
+setTimeout(loadDrinksFromFirebase, 2000);
     </script>
 </body>
 </html>
