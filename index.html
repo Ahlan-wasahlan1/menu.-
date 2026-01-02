@@ -944,6 +944,29 @@
                 window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
             }
         }
+        <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-d5rD_cbAXzQAxd29QcTle9F6lrHNqw4",
+    authDomain: "ahlan-menu.firebaseapp.com",
+    projectId: "ahlan-menu",
+    storageBucket: "ahlan-menu.firebasestorage.app",
+    messagingSenderId: "76739908520",
+    appId: "1:76739908520:web:c662a43b9ff2e59652039d",
+    measurementId: "G-4LWS4GXYDL"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
     </script>
 </body>
 </html>
