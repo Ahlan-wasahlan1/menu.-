@@ -988,6 +988,10 @@
   if (drinks.length > 0 && window.originalMenu) {
     window.originalMenu.drinks.items = drinks;
     console.log("✅ Drinks loaded from Firebase:", drinks);
+      const drinksSection = document.getElementById("section-drinks");
+if (drinksSection) {
+  renderSection("drinks", "mini");
+}
   }
 }
 
