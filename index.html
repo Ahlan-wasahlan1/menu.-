@@ -945,6 +945,31 @@
             }
         }
     </script>
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-d5rD_cbAXzQAxd29QcTle9F6lrHNqw4",
+    authDomain: "ahlan-menu.firebaseapp.com",
+    projectId: "ahlan-menu",
+    storageBucket: "ahlan-menu.firebasestorage.app",
+    messagingSenderId: "76739908520",
+    appId: "1:76739908520:web:c662a43b9ff2e59652039d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  async function testFirebase() {
+    const snapshot = await getDocs(collection(db, "items"));
+    snapshot.forEach(doc => {
+      console.log("🔥 Firebase Item:", doc.data());
+    });
+  }
+
+  testFirebase();
+    </script>
 </body>
 </html>
    
