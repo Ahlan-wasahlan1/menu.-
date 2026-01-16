@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مطعم أهلاً وسهلاً | النسخة النهائية</title>
+    <title>مطعم أهلاً وسهلاً | النسخة البلاتينية</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,18 +38,12 @@
                     },
                     animation: {
                         'jump': 'jump 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
-                        'pulse-slow': 'pulse 3s infinite',
-                        'pop-in': 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
                     },
                     keyframes: {
                         'jump': {
                             '0%': { transform: 'translateY(0) scale(1)' },
                             '50%': { transform: 'translateY(-20px) scale(1.1)' },
                             '100%': { transform: 'translateY(-10px) scale(1.05)' }
-                        },
-                        'popIn': {
-                            '0%': { transform: 'scale(0)' },
-                            '100%': { transform: 'scale(1)' }
                         }
                     }
                 }
@@ -93,15 +87,12 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #9ca3af; font-size: 0.7rem; font-weight: 700; gap: 4px; width: 60px; cursor: pointer; }
         .nav-item:active { color: #c02626; transform: scale(0.95); }
         .nav-icon { font-size: 1.5rem; }
-        .nav-item.center-cart .nav-icon { background: white; color: #c02626; width: 55px; height: 55px; border-radius: 50%; border: 2px solid #f3f4f6; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease; position: relative; } /* ADDED RELATIVE HERE */
+        .nav-item.center-cart .nav-icon { background: white; color: #c02626; width: 55px; height: 55px; border-radius: 50%; border: 2px solid #f3f4f6; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.3s ease; position: relative; }
         html.dark .nav-item.center-cart .nav-icon { background: #1f2937; border-color: #374151; color: white; }
         .nav-item.center-cart.popped .nav-icon { animation: jump 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; background: #c02626; color: white; border-color: #fff7ed; box-shadow: 0 10px 25px rgba(192, 38, 38, 0.5); }
         #miniCheckoutBar { position: fixed; bottom: 120px; left: 15px; right: 15px; background: #1f2937; color: white; border-radius: 18px; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px -10px rgba(0,0,0,0.3); z-index: 40; transform: translateY(200%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); height: 60px; }
         #miniCheckoutBar.visible { transform: translateY(0); }
-        
-        /* 🔴🔴 MODIFIED DARK MODE STYLE FOR LUXURY 🔴🔴 */
         html.dark #miniCheckoutBar { background: #111827; border: 1px solid #f59e0b; color: white; }
-
         .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 3000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal-content { background: white; width: 95%; max-width: 420px; border-radius: 28px; padding: 0; transform: scale(0.9); transition: transform 0.3s; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
         .modal-open { display: flex !important; opacity: 1 !important; }
@@ -118,32 +109,15 @@
         .hidden-view { display: none; }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        /* ➕ NEW FILTER STYLES */
         .filter-chip { padding: 6px 16px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; transition: all 0.2s; border: 1px solid transparent; cursor: pointer; white-space: nowrap; }
         .filter-chip.active { background: #c02626; color: white; box-shadow: 0 4px 10px rgba(192, 38, 38, 0.3); }
         .filter-chip.inactive { background: #fff; color: #6b7280; border-color: #e5e7eb; }
         html.dark .filter-chip.inactive { background: #1f2937; color: #9ca3af; border-color: #374151; }
-
-        /* 🔴🔴 NEW BADGE STYLE 🔴🔴 */
-        .nav-badge {
-            position: absolute;
-            top: -5px; right: -5px;
-            background-color: #f59e0b; /* Brand Gold */
-            color: #111827;
-            font-size: 0.7rem;
-            font-weight: 900;
-            width: 22px; height: 22px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            border: 2px solid white;
-            z-index: 60;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .nav-badge { position: absolute; top: -5px; right: -5px; background-color: #f59e0b; color: #111827; font-size: 0.7rem; font-weight: 900; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid white; z-index: 60; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         html.dark .nav-badge { border-color: #1f2937; color: white; background: #c02626; }
     </style>
 </head>
 <body class="text-gray-800 antialiased selection:bg-brand-red selection:text-white">
-
     <script>
         const LANG = {
             ar: {
@@ -159,9 +133,6 @@
                 search: "بحث",
                 settings: "إعدادات",
                 profile_title: "الملف الشخصي",
-                loyalty_title: "نقاط الولاء",
-                free_delivery: "مجاني عند 10,000",
-                congrats_free: "🎉 مبروك! التوصيل مجاني",
                 dark_mode: "الوضع الليلي 🌙",
                 language: "اللغة / Language",
                 bill_title: "فاتورة الطلب 🧾",
@@ -191,7 +162,13 @@
                 breakfast: "فطور 🍳",
                 lunch: "غداء 🍗",
                 dinner: "عشاء 🍔",
-                quick_reorder: "طلب سريع (آخر طلبين)"
+                quick_reorder: "طلب سريع (آخر طلبين)",
+                notes_placeholder: "ملاحظات إضافية (مثلاً: بدون بصل، كثر الشطة...)",
+                archive_btn: "📂 عرض أرشيف الطلبات",
+                clear_history: "🗑️ مسح السجل",
+                reminder_modal_title: "تذكير بالدفع",
+                reminder_modal_body: "عزيزي العميل، يرجى التأكد من إرفاق صورة الحوالة (السند) بعد إرسال الطلب مباشرة في الواتساب.",
+                i_understand: "حسناً، فهمت 👍"
             },
             en: {
                 app_title: "Ahlan Restaurant",
@@ -206,9 +183,6 @@
                 search: "Search",
                 settings: "Settings",
                 profile_title: "Profile",
-                loyalty_title: "Loyalty Points",
-                free_delivery: "Free at 10,000",
-                congrats_free: "🎉 Congrats! Free Delivery",
                 dark_mode: "Dark Mode 🌙",
                 language: "Language / اللغة",
                 bill_title: "Order Bill 🧾",
@@ -238,7 +212,13 @@
                 breakfast: "Breakfast",
                 lunch: "Lunch",
                 dinner: "Dinner",
-                quick_reorder: "Quick Re-order"
+                quick_reorder: "Quick Re-order",
+                notes_placeholder: "Extra notes (e.g., No onion, extra spicy...)",
+                archive_btn: "📂 Show Order Archive",
+                clear_history: "🗑️ Clear History",
+                reminder_modal_title: "Payment Reminder",
+                reminder_modal_body: "Please remember to attach the transfer receipt immediately after sending the order on WhatsApp.",
+                i_understand: "OK, I Understand 👍"
             }
         };
 
@@ -273,7 +253,7 @@
     <!-- Hero Section -->
     <div id="hero-container" class="mx-3 mt-4 mb-4"></div>
 
-    <!-- ➕ MEAL FILTERS (NEW) -->
+    <!-- ➕ MEAL FILTERS -->
     <div class="px-4 mb-2 flex gap-2 overflow-x-auto pb-2 no-scrollbar" id="meal-filters">
         <button onclick="filterMenu('all')" class="filter-chip active" id="filter-all" data-lang="all">الكل ♾️</button>
         <button onclick="filterMenu('breakfast')" class="filter-chip inactive" id="filter-breakfast" data-lang="breakfast">فطور 🍳</button>
@@ -307,7 +287,7 @@
         </div>
     </div>
 
-    <!-- Footer Rights (UPDATED WHATSAPP LINK) -->
+    <!-- Footer Rights -->
     <div class="text-center py-6 border-t border-gray-200 dark:border-gray-700 pb-36 mb-10">
         <p class="text-[10px] text-gray-400 font-bold mb-2">جميع الحقوق محفوظة © لمطعم أهلاً وسهلاً 2026</p>
         <a href="https://wa.me/967775904946?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D9%81%D8%B1%D9%8A%D9%82%20Yemen%20Click%D8%8C%20%D8%B4%D9%81%D8%AA%20%D8%B4%D8%BA%D9%84%D9%83%D9%85%20%D9%81%D9%8A%20%D9%85%D8%B7%D8%B9%D9%85%20%D8%A3%D9%87%D9%84%D8%A7%D9%8B%20%D9%88%D8%B3%D9%87%D9%84%D8%A7%D9%8B%20%D9%88%D8%A3%D8%B1%D9%8A%D8%AF%20%D9%85%D9%88%D9%82%D8%B9%20%D8%AE%D8%A7%D8%B5%20%D9%84%D9%85%D8%B4%D8%B1%D9%88%D8%B9%D9%8A..." target="_blank" class="bg-stone-200 text-gray-700 px-6 py-2 rounded-xl shadow-sm text-xs font-black dark:bg-gray-700 dark:text-gray-300">YEMEN CLICK 🚀</a>
@@ -336,7 +316,6 @@
             <div class="nav-icon text-gray-400">📤</div><span data-lang="share">مشاركة</span>
         </div>
         <div class="nav-item center-cart" id="center-cart-btn" onclick="openPaymentWizard()">
-            <!-- 🔴🔴 ADDED THE BADGE HERE 🔴🔴 -->
             <div class="nav-icon relative">
                 <span class="text-2xl">🛒</span>
                 <span id="cart-badge" class="nav-badge scale-0">0</span>
@@ -361,6 +340,12 @@
                 </div>
                 <div class="p-4 bg-white dark:bg-gray-900 overflow-y-auto max-h-[60vh]">
                     <div id="bill-items" class="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4"></div>
+                    
+                    <!-- ➕ NEW NOTES FIELD -->
+                    <div class="mb-3">
+                        <textarea id="order-notes" rows="2" data-lang="notes_placeholder" placeholder="ملاحظات إضافية (مثلاً: بدون بصل، كثر الشطة...)" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-red dark:bg-gray-800 dark:border-gray-600 dark:text-white resize-none"></textarea>
+                    </div>
+
                     <div class="flex justify-between items-center font-black text-xl text-brand-red border-t pt-3 dark:border-gray-700">
                         <span data-lang="total">الإجمالي:</span>
                         <span><span id="bill-total">0</span> ر.ي</span>
@@ -413,6 +398,16 @@
         </div>
     </div>
 
+    <!-- 🔔 PAYMENT REMINDER MODAL (NEW) -->
+    <div id="reminder-modal" class="modal-backdrop" style="z-index: 3100;" onclick="closeReminderModal()">
+        <div class="modal-content w-[85%] max-w-sm p-5 text-center" onclick="event.stopPropagation()">
+            <div class="text-4xl mb-2">⚠️</div>
+            <h3 class="font-black text-xl text-gray-800 mb-2 dark:text-white" data-lang="reminder_modal_title">تذكير بالدفع</h3>
+            <p class="text-gray-500 text-sm mb-6 dark:text-gray-300" data-lang="reminder_modal_body">عزيزي العميل، يرجى التأكد من إرفاق صورة الحوالة (السند) بعد إرسال الطلب مباشرة في الواتساب.</p>
+            <button onclick="confirmPaymentReminder()" class="bg-brand-gold text-brand-dark w-full py-3 rounded-xl font-black shadow-lg" data-lang="i_understand">حسناً، فهمت 👍</button>
+        </div>
+    </div>
+
     <!-- ⚙️ SETTINGS MODAL -->
     <div id="settings-modal" class="modal-backdrop" onclick="closeSettingsModal(event)">
         <div class="modal-content h-auto self-end w-full max-w-full rounded-b-none rounded-t-[2rem]" onclick="event.stopPropagation()">
@@ -428,30 +423,30 @@
                 <input type="file" id="profile-upload" class="hidden" accept="image/*" onchange="uploadImage(this)">
                 <input type="text" id="user-name" placeholder="اضغط لكتابة اسمك" class="bg-transparent text-center text-white font-black text-lg placeholder-white/70 outline-none w-full border-b border-white/20 pb-1 mb-2 focus:border-white" oninput="saveSettings()">
                 <input type="tel" id="user-phone" placeholder="رقم هاتفك" class="bg-transparent text-center text-white/80 font-bold text-sm placeholder-white/50 outline-none w-full" oninput="saveSettings()">
-                <div class="bg-black/20 rounded-xl p-3 text-left mt-4 backdrop-blur-sm relative">
-                    <div class="flex justify-between text-xs font-bold mb-1">
-                        <span data-lang="loyalty_title">نقاط الولاء</span>
-                        <span class="text-[10px] opacity-80" data-lang="free_delivery">(مجاني عند 10,000)</span>
-                        <span id="points-display">0 / 10,000</span>
-                    </div>
-                    <div class="bg-white/20 h-2 rounded-full overflow-hidden"><div id="points-bar" class="h-full bg-brand-gold w-0 transition-all duration-1000"></div></div>
-                    <p id="free-delivery-msg" class="text-[10px] mt-1 text-green-300 font-bold hidden" data-lang="congrats_free">🎉 مبروك! التوصيل مجاني</p>
-                </div>
             </div>
             
             <div class="p-4 space-y-4 bg-white dark:bg-gray-900 overflow-y-auto max-h-[40vh]">
-                <!-- ➕ QUICK REORDER SECTION -->
+                <!-- ➕ QUICK REORDER SECTION (RED ZONE - UNTOUCHED) -->
                 <div class="border-b pb-4 dark:border-gray-700">
                     <h4 class="font-bold text-xs text-brand-red mb-3 uppercase" data-lang="quick_reorder">طلب سريع (آخر طلبين)</h4>
                     <div id="quick-history-list" class="space-y-2"></div>
                 </div>
 
+                <!-- ➕ ARCHIVED HISTORY (BLUE ZONE - HIDDEN BY DEFAULT) -->
                 <div class="border-b pb-4 dark:border-gray-700">
-                    <h4 class="font-bold text-xs text-gray-400 mb-2" data-lang="order_history">سجل الطلبات</h4>
-                    <div id="history-list" class="space-y-2 text-center text-sm text-gray-500">
-                        <span data-lang="no_history">لا توجد طلبات سابقة</span>
+                    <button onclick="toggleArchive()" class="w-full bg-gray-100 text-gray-600 font-bold py-2 rounded-xl text-sm flex justify-between items-center px-4 mb-2 dark:bg-gray-800 dark:text-gray-300">
+                        <span data-lang="archive_btn">📂 عرض أرشيف الطلبات</span>
+                        <span id="archive-arrow">▼</span>
+                    </button>
+                    
+                    <div id="archive-container" class="hidden space-y-2">
+                        <button onclick="clearHistory()" class="w-full text-red-400 text-xs font-bold py-1 mb-2 text-right" data-lang="clear_history">🗑️ مسح السجل</button>
+                        <div id="history-list" class="space-y-2 text-center text-sm text-gray-500">
+                            <span data-lang="no_history">لا توجد طلبات سابقة</span>
+                        </div>
                     </div>
                 </div>
+
                  <div class="flex justify-between items-center">
                     <span class="font-bold dark:text-white" data-lang="dark_mode">الوضع الليلي 🌙</span>
                     <label class="relative inline-flex items-center cursor-pointer">
@@ -459,7 +454,6 @@
                         <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:bg-brand-gold peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                     </label>
                 </div>
-                <!-- ➕ HAPTIC TOGGLE -->
                  <div class="flex justify-between items-center">
                     <span class="font-bold dark:text-white" data-lang="haptic_mode">الاهتزاز 📳</span>
                     <label class="relative inline-flex items-center cursor-pointer">
@@ -487,7 +481,7 @@
     </div>
 
     <script>
-        // ================= UPDATED DATA WITH TAGS =================
+        // ================= UPDATED DATA =================
         const originalMenu = {
             grills: { titleAr: "اللحوم والمشويات", titleEn: "Grills & Meat", icon: "🔥", tags: ['lunch', 'dinner'], items: [ 
                 { nameAr: 'دجاج شواية', nameEn: 'Rotisserie Chicken', price: 3500, descAr: 'تحمير ذهبي مع الرز', descEn: 'Golden roasted with rice', img: 'https://i.postimg.cc/c4cw1RSk/sddefault-(4).jpg' },
@@ -521,6 +515,7 @@
                 { nameAr: '7 UP', nameEn: '7 UP', price: 300, img: 'https://i.postimg.cc/W1VnfFwc/Pepsi-Co-7UP-Global-Mixology-Campaign.jpg' }
             ]}
         };
+
         const fullMenu = {
             burger: { titleAr: "قسم البرجر", titleEn: "Burgers", img: "https://i.ibb.co/MxHKwrX1/Best-Burgers-in-Ras-Al-Khaimah-Cover-28-092025ar.jpg", items: [ { nameAr: 'برجر أهلاً وسهلاً ماكس', nameEn: 'Ahlan Max Burger', price: 1800 }, { nameAr: 'برجر أهلاً وسهلاً', nameEn: 'Ahlan Burger', price: 1300 }, { nameAr: 'برجر دبل جبن', nameEn: 'Double Cheese Burger', price: 1100 } ] },
             shawarma: { titleAr: "قسم الشاورما", titleEn: "Shawarma", img: "https://i.postimg.cc/ZqCwdVWN/maxresdefault-(4).jpg", items: [ { nameAr: 'شاورما أهلاً وسهلاً', nameEn: 'Ahlan Shawarma', price: 1500 }, { nameAr: 'صحن شاورما عربي', nameEn: 'Arabic Shawarma Plate', price: 1300 } ] },
@@ -533,13 +528,13 @@
         let cart = {}; 
         let totalAmount = 0;
         let userLocationLink = '';
-        let userProfile = { name: '', phone: '', img: '', points: 0, history: [], haptic: true };
+        let userProfile = { name: '', phone: '', img: '', history: [], haptic: true }; // 🗑️ REMOVED POINTS
         let currentLang = 'ar';
         let currentSlide = 0;
         let slideInterval;
         let directOffer = null; 
+        let tempPaymentMethod = '';
 
-        // ➕ HAPTIC HELPER
         const Haptic = {
             trigger: (type) => {
                 if(!userProfile.haptic) return;
@@ -574,10 +569,9 @@
                     document.getElementById('profile-img').classList.remove('hidden');
                     document.getElementById('profile-placeholder').classList.add('hidden');
                 }
-                // Haptic state
                 document.getElementById('haptic-toggle').checked = userProfile.haptic !== false;
                 
-                updatePointsUI();
+                // 🗑️ REMOVED updatePointsUI CALL
                 renderHistory();
             }
             if(localStorage.getItem('theme') === 'dark') {
@@ -599,7 +593,6 @@
             saveSettings();
         }
 
-        // ➕ MEAL FILTERS
         function filterMenu(type) {
             Haptic.trigger('medium');
             document.querySelectorAll('.filter-chip').forEach(el => el.classList.replace('active', 'inactive'));
@@ -624,7 +617,6 @@
             initHeroSection(); 
         }
 
-        // ... [LANGUAGE UI FUNCTION SAME AS BEFORE] ...
         function updateLanguageUI() {
             const t = LANG[currentLang];
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
@@ -632,13 +624,12 @@
             document.querySelectorAll('[data-lang]').forEach(el => {
                 const key = el.getAttribute('data-lang');
                 if(t[key]) {
-                    if(el.tagName === 'INPUT') el.placeholder = t[key];
+                    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[key];
                     else el.innerText = t[key];
                 }
             });
         }
 
-        // ... [SLIDER LOGIC SAME AS BEFORE] ...
         function initHeroSection() {
             clearInterval(slideInterval);
             const c = document.getElementById('hero-container');
@@ -662,6 +653,7 @@
             currentSlide = 0;
             slideInterval = setInterval(() => moveSlide(1), 5000);
         }
+
         function moveSlide(dir) {
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.dot');
@@ -671,6 +663,7 @@
             slides[currentSlide].classList.add('active');
             dots[currentSlide].classList.add('active');
         }
+
         function setSlide(idx) {
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.dot');
@@ -682,6 +675,7 @@
             clearInterval(slideInterval);
             slideInterval = setInterval(() => moveSlide(1), 5000);
         }
+
         function buyOffer(id) {
             Haptic.trigger('heavy');
             const offer = window.OFFERS_DATA.find(o => o.id === id);
@@ -695,7 +689,6 @@
             document.getElementById('bill-total').innerText = offer.price.toLocaleString();
         }
 
-        // ================= CART LOGIC =================
         function addToCart(el, nameAr, price) {
             Haptic.trigger('soft');
             updateQty(nameAr, price, 1);
@@ -707,14 +700,12 @@
             cart[nameAr] += change;
             if(cart[nameAr] < 0) cart[nameAr] = 0;
             if(cart[nameAr] === 0) delete cart[nameAr];
-
             if(change > 0) {
                 const cartBtn = document.getElementById('center-cart-btn');
                 cartBtn.classList.remove('popped');
                 void cartBtn.offsetWidth; 
                 cartBtn.classList.add('popped');
             }
-
             totalAmount = 0;
             Object.keys(cart).forEach(k => { 
                 let p = price; 
@@ -730,7 +721,6 @@
             document.querySelectorAll('.qty-display').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.btn-remove').forEach(el => el.classList.add('hidden'));
             
-            // 🔴🔴 NEW BADGE LOGIC 🔴🔴
             let totalItems = 0;
             Object.values(cart).forEach(qty => totalItems += qty);
             const badge = document.getElementById('cart-badge');
@@ -740,7 +730,6 @@
             } else {
                 badge.classList.add('scale-0');
             }
-
             Object.keys(cart).forEach(nameAr => {
                 const safe = nameAr.replace(/\s+/g, '-');
                 const qty = cart[nameAr];
@@ -765,7 +754,6 @@
             }
         }
 
-        // ================= CHECKOUT & HISTORY =================
         function openPaymentWizard() {
             Haptic.trigger('medium');
             const t = LANG[currentLang];
@@ -786,30 +774,54 @@
             document.getElementById('bill-total').innerText = totalAmount.toLocaleString();
         }
 
+        // ================= MODIFIED PAYMENT LOGIC =================
         function processPayment(method) {
             Haptic.trigger('heavy');
             const t = LANG[currentLang];
             if(!userLocationLink) { alert(t.location_alert); return; }
             
+            tempPaymentMethod = method;
+
+            // 🛑 CHECK FOR PAYMENT METHOD
+            if(method === 'cash') {
+                finalizePayment();
+            } else {
+                document.getElementById('reminder-modal').classList.add('modal-open');
+            }
+        }
+
+        function confirmPaymentReminder() {
+            closeReminderModal();
+            finalizePayment();
+        }
+
+        function closeReminderModal() {
+            document.getElementById('reminder-modal').classList.remove('modal-open');
+        }
+
+        function finalizePayment() {
             let finalPrice = directOffer ? directOffer.price : totalAmount;
             
-            userProfile.points += finalPrice; 
+            // 🗑️ REMOVED LOYALTY CALCULATION
+
             if(!userProfile.history) userProfile.history = [];
             
-            // Save full cart object for re-order
             let orderSummary = directOffer ? (currentLang==='ar'?directOffer.titleAr:directOffer.titleEn) : Object.keys(cart).length + ' Items';
             userProfile.history.unshift({ 
                 date: new Date().toLocaleDateString(), 
                 total: finalPrice, 
                 summary: orderSummary,
-                items: directOffer ? null : JSON.parse(JSON.stringify(cart)) // Save cart for reorder
+                items: directOffer ? null : JSON.parse(JSON.stringify(cart)) 
             });
             
             saveSettings(); 
-            updatePointsUI();
+            // 🗑️ REMOVED updatePointsUI CALL
             renderHistory();
 
-            let msg = `*طلب جديد (${method.toUpperCase()})*\n`;
+            // ➕ GET NOTES
+            const notes = document.getElementById('order-notes').value;
+
+            let msg = `*طلب جديد (${tempPaymentMethod.toUpperCase()})*\n`;
             msg += `----------------\n`;
             if(directOffer) {
                 msg += `🔥 OFFER: ${directOffer.titleAr} - ${directOffer.price}\n`;
@@ -817,12 +829,18 @@
                 Object.keys(cart).forEach(k => msg += `▪️ ${k} (${cart[k]})\n`);
             }
             msg += `----------------\n`;
+            // 📝 ADD NOTES TO MSG
+            if(notes && notes.trim() !== "") {
+                msg += `📝 ملاحظات العميل:\n"${notes}"\n`;
+                msg += `----------------\n`;
+            }
             msg += `💰 الإجمالي: ${finalPrice.toLocaleString()} ريال\n`;
             msg += `📍 الموقع: ${userLocationLink}\n`;
             msg += `👤 العميل: ${userProfile.name} (${userProfile.phone})`;
-
+            
             window.open(`https://wa.me/967779100056?text=${encodeURIComponent(msg)}`, '_blank');
             closePaymentModal();
+            document.getElementById('order-notes').value = ''; // Reset notes
             if(directOffer) directOffer = null;
         }
 
@@ -841,8 +859,7 @@
                  if(type === 'horizontal') grid = "grid grid-cols-1 md:grid-cols-2 gap-5";
                  if(type === 'large') grid = "grid gap-5";
                  if(type === 'mini') grid = "grid grid-cols-2 md:grid-cols-4 gap-3";
-
-                 // ➕ ADD DATA TAGS TO SECTION
+                 
                  return `
                     <section id="section-${k}" data-tags="${data.tags.join(',')},all">
                         <div class="flex items-center gap-3 mb-6 px-1">
@@ -862,7 +879,6 @@
             const desc = currentLang==='ar' ? (item.descAr||'') : (item.descEn||'');
             const onclick = `addToCart(this, '${item.nameAr}', ${item.price})`;
             const controls = getControls(item.nameAr, item.price, type==='mini'||type==='vertical');
-
             if(type === 'horizontal') return `<div class="clickable-card bg-white p-4 rounded-3xl shadow-soft border border-orange-50 flex gap-5 items-center dark:bg-gray-800 dark:border-gray-700" onclick="${onclick}"><img src="${item.img}" class="food-img shadow-md"><div class="flex-1 h-full flex flex-col justify-between py-1"><div><h4 class="font-black text-xl text-gray-800 leading-tight mb-1 dark:text-white">${name}</h4><p class="text-sm text-gray-500 font-medium">${desc}</p></div><div class="flex justify-between items-end mt-3"><span class="font-black text-brand-red text-2xl">${item.price} <span class="text-xs text-gray-400 font-bold">ر.ي</span></span>${controls}</div></div></div>`;
             else if (type === 'large') return `<div class="clickable-card bg-white rounded-3xl shadow-soft border border-orange-50 overflow-hidden flex flex-row-reverse dark:bg-gray-800 dark:border-gray-700" onclick="${onclick}"><div class="w-2/5"><img src="${item.img}" class="h-full w-full object-cover"></div><div class="w-3/5 p-5 flex flex-col justify-center items-start"><h4 class="font-black text-xl text-gray-800 dark:text-white">${name}</h4><p class="text-sm text-gray-400 mb-4 mt-1 font-medium">${desc}</p><div class="w-full flex justify-between items-end"><span class="text-2xl font-black text-brand-red">${item.price} <small class="text-gray-400 text-xs">ر.ي</small></span>${controls}</div></div></div>`;
             else return `<div class="clickable-card bg-white p-3 rounded-3xl shadow-soft border border-orange-50 text-center dark:bg-gray-800 dark:border-gray-700" onclick="${onclick}"><img src="${item.img}" class="w-full h-32 object-cover rounded-2xl mb-3 shadow-sm"><h4 class="font-bold text-gray-800 mb-2 dark:text-white">${name}</h4><div class="flex justify-between items-center px-1"><span class="text-brand-red font-black text-lg">${item.price} <small class="text-xs">ر.ي</small></span>${controls}</div></div>`;
@@ -873,6 +889,7 @@
             const cls = small ? "scale-75" : "";
             return `<div class="flex items-center gap-3" id="ctrl-${safe}"><button class="btn-control btn-remove hidden ${cls}" onclick="event.stopPropagation(); updateQty('${nameAr}', ${price}, -1)">-</button><span class="qty-display hidden" id="qty-${safe}">0</span><button class="btn-control btn-add ${cls}" onclick="event.stopPropagation(); updateQty('${nameAr}', ${price}, 1)">+</button></div>`;
         }
+
         function renderCategoriesGrid() {
             document.getElementById('categories-grid').innerHTML = Object.keys(fullMenu).map(k => {
                 const c = fullMenu[k];
@@ -880,6 +897,7 @@
                 return `<div class="cat-card-new" onclick="openCategory('${k}')"><img src="${c.img}" class="cat-card-bg"><div class="cat-overlay"><h3 class="cat-title">${title}</h3></div></div>`;
             }).join('');
         }
+
         function openCategory(k) {
             Haptic.trigger('medium');
             const cat = fullMenu[k];
@@ -893,19 +911,12 @@
             }).join('');
             updateUI();
         }
-        function updatePointsUI() {
-            const max = 10000;
-            let current = userProfile.points;
-            if(current > max) current = max;
-            let percent = (current / max) * 100;
-            document.getElementById('points-bar').style.width = percent + '%';
-            document.getElementById('points-display').innerText = `${Math.floor(userProfile.points).toLocaleString()} / ${max.toLocaleString()}`;
-            if(userProfile.points >= max) document.getElementById('free-delivery-msg').classList.remove('hidden');
-        }
 
-        // ➕ RENDER HISTORY WITH QUICK REORDER
+        // 🗑️ REMOVED updatePointsUI Function
+
+        // ➕ RENDER HISTORY UPDATED (ARCHIVE)
         function renderHistory() {
-            // 1. Render Last 2 for Quick Reorder
+            // 1. Render Last 2 for Quick Reorder (RED ZONE)
             const quickContainer = document.getElementById('quick-history-list');
             const quickOrders = userProfile.history.slice(0, 2);
             if(quickOrders.length > 0) {
@@ -924,10 +935,16 @@
                 quickContainer.innerHTML = `<span class="text-xs text-gray-400">لا توجد طلبات حديثة</span>`;
             }
 
-            // 2. Standard History List
+            // 2. Standard History List (BLUE ZONE - HIDDEN)
             const list = document.getElementById('history-list');
-            if(!userProfile.history || userProfile.history.length === 0) return;
-            list.innerHTML = userProfile.history.map(h => `
+            const remainingOrders = userProfile.history; 
+            
+            if(remainingOrders.length === 0) {
+                list.innerHTML = `<span class="text-xs text-gray-400">${LANG[currentLang].no_history}</span>`;
+                return;
+            }
+
+            list.innerHTML = remainingOrders.map(h => `
                 <div class="flex justify-between border-b border-gray-100 pb-2 mb-2 dark:border-gray-600">
                     <div class="text-right">
                         <div class="text-xs text-gray-400 font-bold">${h.date}</div>
@@ -938,26 +955,42 @@
             `).join('');
         }
 
-        // ➕ QUICK REORDER FUNCTION
         function quickReorder(idx) {
             const order = userProfile.history[idx];
             if(!order.items) return alert("لا يمكن إعادة طلب العروض الخاصة");
             if(confirm("هل تريد إضافة محتويات هذا الطلب للسلة؟")) {
                 cart = order.items;
-                // Recalc total
                 totalAmount = 0;
-                Object.keys(cart).forEach(k => {
-                     // simplified total recalc (accurate price requires lookup, but assuming saved logic)
-                     // for robustness, we trigger an update loop:
-                     updateQty(k, 0, 0); 
-                });
+                Object.keys(cart).forEach(k => { updateQty(k, 0, 0); });
                 closeSettingsModal();
                 Haptic.trigger('heavy');
                 openPaymentWizard();
             }
         }
 
+        function toggleArchive() {
+            const c = document.getElementById('archive-container');
+            const arrow = document.getElementById('archive-arrow');
+            if(c.classList.contains('hidden')) {
+                c.classList.remove('hidden');
+                arrow.innerText = '▲';
+            } else {
+                c.classList.add('hidden');
+                arrow.innerText = '▼';
+            }
+        }
+
+        function clearHistory() {
+            if(confirm('هل أنت متأكد من مسح سجل الطلبات بالكامل؟')) {
+                userProfile.history = []; // Complete Wipe
+                saveSettings();
+                renderHistory();
+                alert('تم مسح السجل بنجاح');
+            }
+        }
+
         function showCategoriesGrid() { document.getElementById('categories-grid').style.display = 'grid'; document.getElementById('category-detail').style.display = 'none'; }
+
         function switchView(v) {
             Haptic.trigger('medium');
             document.getElementById('view-main').style.display = v==='main'?'block':'none';
@@ -965,11 +998,13 @@
             document.getElementById('btn-main').className = `tab-btn ${v==='main'?'active':'inactive'}`;
             document.getElementById('btn-categories').className = `tab-btn ${v==='categories'?'active':'inactive'}`;
         }
+
         function openSettingsModal() { Haptic.trigger('medium'); document.getElementById('settings-modal').classList.add('modal-open'); }
         function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('modal-open'); }
         function openSearchModal() { Haptic.trigger('medium'); document.getElementById('search-modal').classList.add('modal-open'); document.getElementById('real-search-input').focus(); }
         function closeSearchModal() { document.getElementById('search-modal').classList.remove('modal-open'); }
         function toggleTheme() { Haptic.trigger('medium'); document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark')?'dark':'light'); }
+
         function requestUserLocation() {
             const t = LANG[currentLang];
             const btn = document.getElementById('btn-location');
@@ -982,6 +1017,7 @@
                 }, () => { alert(t.location_fail); userLocationLink = 'Location_Failed'; btn.innerHTML = t.location_btn; });
             } else { alert('Unsupported'); }
         }
+
         function uploadImage(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -995,6 +1031,7 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
         function performSearch() {
             const q = document.getElementById('real-search-input').value.toLowerCase();
             const res = document.getElementById('search-results');
@@ -1010,25 +1047,18 @@
             matches.forEach(i => updateUI(i.name));
         }
 
-        // ➕ FIXED SHARE FUNCTION (USE EXACT URL)
         function shareApp() {
              Haptic.trigger('medium');
              const t = LANG[currentLang];
              let msg = "";
              const items = Object.keys(cart);
-             
-             // The URL requested by user
              const myUrl = 'https://ahlan-wasahlan1.github.io/menu.-/';
-
              if(items.length > 0) {
-                 // Context-Aware Message
                  const itemsList = items.join(' + ');
                  msg = `يا شباب أنا بطلب (${itemsList}) من مطعم أهلاً وسهلاً.. من يطلب معي؟ 😋\n${myUrl}`;
              } else {
-                 // Default Message
                  msg = `جربوا مطعم أهلاً وسهلاً! أكل يمني على كيفك..\n${myUrl}`;
              }
-             
              if(navigator.share) navigator.share({title:t.app_title, text:msg, url: myUrl});
              else window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
         }
@@ -1037,10 +1067,12 @@
             document.getElementById('step-review').classList.add('hidden');
             document.getElementById('step-payment').classList.remove('hidden');
         }
+
         function backToReview() {
             document.getElementById('step-review').classList.remove('hidden');
             document.getElementById('step-payment').classList.add('hidden');
         }
+
         function closePaymentModal() { document.getElementById('paymentModal').classList.remove('modal-open'); directOffer = null; }
     </script>
 </body>
