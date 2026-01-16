@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مطعم أهلاً وسهلاً | النسخة البلاتينية</title>
+    <title>مطعم أهلاً وسهلاً | النسخة الرسمية</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -546,11 +546,28 @@
             }
         };
 
+        // 🌉 جسر الإشعارات (Median + OneSignal Bridge)
+        // هذا الكود يتأكد من تسجيل الجهاز حتى لو المستخدم وافق مسبقاً
+        function median_onesignal_init() {
+             if (navigator.userAgent.indexOf('median') > -1 || navigator.userAgent.indexOf('gonative') > -1) {
+                // أمر التسجيل الإجباري في الخلفية
+                window.location.href = 'median://onesignal/register';
+                
+                // أمر إظهار النافذة (لن يزعج المستخدم إذا وافق مسبقاً، لكنه يضمن التفعيل)
+                setTimeout(function(){ 
+                    window.location.href = 'median://onesignal/prompt'; 
+                }, 3000);
+            }
+        }
+
         window.onload = function() {
             loadSettings();
             initHeroSection();
             renderAll();
             updateLanguageUI();
+            
+            // 👇👇 تشغيل الجسر تلقائياً 👇👇
+            median_onesignal_init();
         };
 
         function renderAll() {
