@@ -1076,4 +1076,28 @@
         function closePaymentModal() { document.getElementById('paymentModal').classList.remove('modal-open'); directOffer = null; }
     </script>
 </body>
+        // ... (كل الكود السابق) ...
+
+        // هذه الدالة نلصقها في الأخير قبل قفلة السكريبت
+        function median_onesignal_init() {
+             if (navigator.userAgent.indexOf('median') > -1 || navigator.userAgent.indexOf('gonative') > -1) {
+                window.location.href = 'median://onesignal/register';
+                setTimeout(function(){ window.location.href = 'median://onesignal/prompt'; }, 3000);
+            }
+        }
+
+        window.onload = function() {
+            loadSettings();
+            initHeroSection();
+            renderAll();
+            updateLanguageUI();
+            
+            // 👇👇 أضفنا هذا السطر هنا لتشغيل الجسر 👇👇
+            median_onesignal_init();
+        };
+
+        // ... (باقي الدوال مثل shareApp وغيرها) ...
+
+    </script> <!-- قفلة السكريبت -->
+</body>
 </html>
